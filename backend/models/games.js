@@ -19,15 +19,14 @@ const gameSchema = new mongoose.Schema({
     type: String
   },
   genres: {
-    type: [
-      String
-    ]
+    type: Array
   },
+    
+  
   platforms: {
-    type: [
-      String,
-    ]
+    type: Array
   },
+  
   first_release_date: {
     type: Number
   },

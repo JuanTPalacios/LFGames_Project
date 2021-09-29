@@ -15,7 +15,7 @@ export const signUpUser = async (api, body) => {
 
 // Sign In
 
-export const signInUser = async (api, body) => {
+export const signInOldUser = async (api, body) => {
   const response = await fetch(URL + api, {
     method: "POST",
     headers: {
@@ -27,8 +27,5 @@ export const signInUser = async (api, body) => {
   return await response.json();
 };
 
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTUxMDk5MThiNjU1MzIwNWIyNjY5MzQiLCJpYXQiOjE2MzI3MDA4MTd9.TokTaVd7UkZZaZ8I8QU251pPp5a0r33EEa4-E3hYGY8
 
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTUxMDljMDhiNjU1MzIwNWIyNjY5MzkiLCJpYXQiOjE2MzI3MDA4NjR9.IxZiPJs6FAgZmervXW2cqHATQZObwEWaG6xL8WWIWos
 
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTUxMDlmOThiNjU1MzIwNWIyNjY5M2UiLCJpYXQiOjE2MzI3MDA5MjF9.-qGDfeQ1fmh2dr1E4q35zaDiviKklSZzapmVpS6niZs

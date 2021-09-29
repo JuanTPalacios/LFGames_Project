@@ -8,32 +8,33 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import GameShow from "./GameShow";
-import { addGame } from "../redux/GameSlice";
+import { addGame, gameSelector, getMyGameInfo } from "../redux/GameSlice";
 import { authSelector } from "../redux/AuthSlice";
 import { fetchUserByToken } from "../redux/UserSlice";
-import * as SecureStore from "expo-secure-store";
-
-const GameList = ({ games, title, navigation }) => {
+import AsyncStorage from "@react-native-async-storage/async-storage";
+const GameList = ({ games, title, navigation, token }) => {
   const dispatch = useDispatch();
-  // const { isSuccess, isError, errorMessage, token } = useSelector(authSelector);
+  const { isSuccess, isError, errorMessage } = useSelector(authSelector);
+  const { isMessage } = useSelector(gameSelector);
 
-  const addGameToList = (game, token) => {
-    console.log('GAMELIST', token)
-    dispatch(addGame(game, token));
-  };
-  const [token, setToken] = useState(null);
-  useEffect(() => {
-    fetchUser();
-  }, []);
-  const fetchUser = async () => {
+  // useEffect(() => {
+  //   fetchUserInfo()
+  // })
+  // const fetchUserInfo = async () => {
+
+  // };
+
+  const addGameToList = async (game) => {
     try {
-      const token1 = dispatch(
-        fetchUserByToken({ token: await SecureStore.getItemAsync("token") })
+      const userToken = dispatch(
+        fetchUserByToken({ token: await AsyncStorage.getItem("token") })
       );
-      if (token1) {
-        console.log("token", token);
-        setToken(token1.arg.token);
-        // AsyncStorage.clear();
+      if (userToken) {
+        const token = userToken.arg.token;
+        const data = dispatch(addGame({ game, token }));
+        if (data) {
+          dispatch(getMyGameInfo(token));
+        }
       }
     } catch (err) {
       console.log("errror token app", err.message);
@@ -46,6 +47,7 @@ const GameList = ({ games, title, navigation }) => {
         flex: 1,
       }}
     >
+      <Text style={styles.error}>{isMessage}</Text>
       <Text style={styles.title}>{title}</Text>
       <FlatList
         data={games}
@@ -73,6 +75,11 @@ const styles = StyleSheet.create({
   title: {
     marginLeft: 10,
     fontSize: 20,
+    fontWeight: "bold",
+  },
+  error: {
+    fontSize: 16,
+    alignSelf: "center",
     fontWeight: "bold",
   },
 });

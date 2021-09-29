@@ -5,8 +5,6 @@ const URL = "http://192.168.2.16:3000/";
 export const fetchUserByToken = createAsyncThunk(
   "user/fetchUserByToken",
   async ({ token }, thunkAPI) => {
-    console.log("called");
-    // console.log("tokenAPI", token);
     try {
       const response = await fetch(URL + "user", {
         method: "GET",
@@ -20,13 +18,12 @@ export const fetchUserByToken = createAsyncThunk(
       });
       let data = await response.json();
       if (response.status === 200) {
-        return { ...data };
+        return data;
       } else {
-        // return thunkAPI.rejectWithValue(data);
+        return thunkAPI.rejectWithValue(data);
       }
     } catch (e) {
-      // console.log(e);
-      // return thunkAPI.rejectWithValue(e);
+      return thunkAPI.rejectWithValue(e);
     }
   }
 );
@@ -49,7 +46,6 @@ export const userSlice = createSlice({
     builder
       .addCase(fetchUserByToken.pending, (state) => {
         state.isFetching = true;
-        console.log("fulfilled token", payload);
       })
       .addCase(fetchUserByToken.fulfilled, (state, { payload }) => {
         state.isFetching = false;
@@ -57,12 +53,10 @@ export const userSlice = createSlice({
         state.email = payload.user.email;
         state.userName = payload.user.userName;
         state.token = payload.token;
-        console.log("fulfilled token", state);
       })
       .addCase(fetchUserByToken.rejected, (state) => {
         state.isFetching = false;
         state.isError = true;
-        console.log("rejected token!!!,");
       });
   },
 });

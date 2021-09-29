@@ -21,33 +21,41 @@ export const addGame = createAsyncThunk(
         body: JSON.stringify(payload),
       });
       let data = await response.json();
-      console.log("GAME DATA", data);
       if (response.status === 200) {
         return data;
       } else {
-        console.log("heeeeelllo");
         return thunkApi.rejectWithValue(data);
       }
     } catch (err) {
-      console.log("called");
-      console.log("Error", err.message);
       thunkApi.rejectWithValue(err.message);
     }
   }
 );
-export const getGameInfo = createAsyncThunk(
-  "game/getGameInfo",
-  async (body) => {
-    const result = await getMyGames("games", body, {
-      method: "GET",
-      headers: {
-        "Client-ID": `${CLIENT_ID}`,
-        Authorization: `Bearer ${API_TOKEN}`,
-        "content-type": "text/plain",
-      },
-    });
-    console.log(result);
-    return result;
+
+export const getMyGameInfo = createAsyncThunk(
+  "game/getMyGameInfo",
+  async (payload, thunkApi) => {
+    try {
+      const response = await fetch(URL + "games", {
+        method: "GET",
+        credentials: "include",
+        mode: "cors",
+        headers: {
+          Accept: "application/json",
+          Authorization: "Bearer " + payload,
+          "content-type": "application/json",
+        },
+      });
+      let data = await response.json();
+      if (response.status === 200) {
+        return data;
+      } else {
+        return thunkApi.rejectWithValue(data);
+      }
+    } catch (err) {
+      console.log("Error", err.message);
+      thunkApi.rejectWithValue(err.message);
+    }
   }
 );
 
@@ -58,48 +66,56 @@ export const gameSlice = createSlice({
     isSuccess: false,
     isError: false,
     errorMessage: "",
-    games: [],
+    isMessage: "",
+    userGames: [],
   },
-
-  reducers: {},
+  reducers: {
+    clearGameState: (state) => {
+      (state.isFetching = false),
+        (state.isSuccess = false),
+        (state.errorMessage = ""),
+        (userGames = []);
+      isMessage = "";
+      isError = "";
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(addGame.pending, (state) => {
         state.isFetching = true;
       })
       .addCase(addGame.fulfilled, (state, { payload }) => {
-        if (payload.game.gameId) {
-          state.isFetching = false;
-          state.isSuccess = true;
-          state.games.push(payload.game);
-        } else {
-          console.log(state);
-          state.errorMessage = true;
-        }
+        state.isFetching = false;
+
+        state.isSuccess = true;
+        state.isMessage = "";
+        state.errorMessage = true;
       })
       .addCase(addGame.rejected, (state, payload) => {
         state.isFetching = false;
+        state.isMessage = payload.payload.message;
         state.isError = true;
-        console.log("reje");
-      })
-      .addCase(getGameInfo.pending, (state, payload) => {
+      });
+    builder
+      .addCase(getMyGameInfo.pending, (state, payload) => {
         state.isFetching = false;
         state.isError = true;
-        console.log(payload);
       })
-      .addCase(getGameInfo.fulfilled, (state, payload) => {
+      .addCase(getMyGameInfo.fulfilled, (state, { payload }) => {
+        if (payload.length < 1) {
+        }
+        state.isFetching = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.userGames = payload;
+      })
+      .addCase(getMyGameInfo.rejected, (state, payload) => {
         state.isFetching = false;
         state.isError = true;
-        console.log(payload);
-      })
-      .addCase(getGameInfo.rejected, (state, payload) => {
-        state.isFetching = false;
-        state.isError = true;
-        console.log("reje");
       });
   },
 });
 
-// export const { clearState } = authSlice.actions;
+export const { clearGameState } = gameSlice.actions;
 
 export const gameSelector = (state) => state.game;

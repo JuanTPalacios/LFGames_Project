@@ -1,24 +1,24 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import * as SecureStore from "expo-secure-store";
-
-import { signUpUser } from "./FetchCalls.js/AuthFetch";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { signInOldUser, signUpUser } from "./FetchCalls.js/AuthFetch";
 const URL = "http://192.168.2.16:3000/";
 
 //Sign Up User
 export const signUp = createAsyncThunk("auth/signUp", async (body) => {
   const result = await signUpUser("signup", body);
+  AsyncStorage.setItem("token", result.token);
   return result;
 });
 //Sign In User
 export const signInUser = createAsyncThunk("auth/signInUser", async (body) => {
-  const result = await signUpUser("signin", body);
+  const result = await signInOldUser("signin", body);
+  AsyncStorage.setItem("token", result.token);
   return result;
 });
 
 export const signOutUser = createAsyncThunk(
   "auth/signOutUser",
   async (payload, thunkAPI) => {
-    console.log("tokenAPI", payload);
     try {
       const response = await fetch(URL + "signout", {
         method: "GET",
@@ -31,14 +31,13 @@ export const signOutUser = createAsyncThunk(
         },
       });
       let data = await response.json();
-      // console.log(data);
       if (response.status === 200) {
+        await AsyncStorage.removeItem("token");
         return { ...data };
       } else {
         return thunkAPI.rejectWithValue(data);
       }
     } catch (e) {
-      console.log("hi");
       return thunkAPI.rejectWithValue(e);
     }
   }
@@ -71,36 +70,27 @@ export const authSlice = createSlice({
       .addCase(signUp.pending, (state) => {
         state.isFetching = true;
       })
-      .addCase(signUp.fulfilled, (state, { payload }) => {
-        if (payload.error) {
-          state.isSuccess = false;
-          state.errorMessage = payload.error;
-          state.isFetching = false;
-        } else {
-          state.isSuccess = true;
-          state.isFetching = false;
-          state.email = payload.user.email;
-          state.userName = payload.user.userName;
-          state.isAuthenticated = true;
-          SecureStore.setItemAsync("token", payload.token).then(
-            (res) => (state.token = res)
-          );
-          console.log("BLAH", state.token);
-        }
+      .addCase(signUp.fulfilled, (state, payload) => {
+        state.isFetching = false;
+        state.email = payload.meta.arg.userEmail;
+        state.userName = payload.meta.arg.userName;
+        state.isAuthenticated = true;
+        state.errorMessage = "";
+        state.token = payload.payload.token;
+        state.isSuccess = true;
       })
       .addCase(signUp.rejected, (state, payload) => {
         state.isFetching = false;
+
         state.errorMessage = payload.payload.error;
       });
     builder
       .addCase(signInUser.pending, (state) => {
         state.isFetching = true;
       })
-      .addCase(signInUser.fulfilled, async (state, { payload }) => {
+      .addCase(signInUser.fulfilled, (state, { payload }) => {
         if (payload.error) {
           state.isSuccess = false;
-          console.log(payload);
-
           state.errorMessage = payload.error;
           state.isFetching = false;
         } else {
@@ -109,11 +99,12 @@ export const authSlice = createSlice({
           state.email = payload.user.email;
           state.userName = payload.user.userName;
           state.isAuthenticated = true;
+          state.token = payload.token;
+          state.errorMessage = "";
         }
       })
       .addCase(signInUser.rejected, (state, payload) => {
         state.isFetching = false;
-        console.log(payload);
         state.errorMessage = payload.payload.error;
       });
     builder
@@ -122,14 +113,12 @@ export const authSlice = createSlice({
       })
       .addCase(signOutUser.fulfilled, (state, { payload }) => {
         state.isFetching = false;
-        console.log("pay", payload);
 
         state.isSuccess = true;
         state.isAuthenticated = false;
       })
       .addCase(signOutUser.rejected, (state, payload) => {
         state.isFetching = false;
-        console.log(payload);
       });
   },
 });

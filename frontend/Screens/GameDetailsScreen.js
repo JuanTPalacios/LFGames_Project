@@ -37,7 +37,7 @@ const renderParallaxHeader = (item) => {
 const renderFixedHeader = (value) => {
   return (
     <View style={styles.fixedHeader}>
-      <Text style={{ color: "white", fontSize: 20 }}>{value.name}</Text>
+      <Text style={styles.fixedHeader}>{value.name}</Text>
     </View>
   );
 };
@@ -61,11 +61,7 @@ const Platforms = (item) => (
       data={item.platforms}
       listKey={(game, index) => "C" + index.toString()}
       renderItem={({ item }) => {
-        return (
-          <Text style={{ flexDirection: "column", flexBasis: 100 }}>
-            {item.name}
-          </Text>
-        );
+        return <Text style={styles.content}>{item.name}</Text>;
       }}
     />
   </>
@@ -78,10 +74,24 @@ const Genres = (item) => (
       data={item.genres}
       listKey={(game, index) => game.name}
       renderItem={({ item }) => {
+        return <Text style={styles.content}>{item.name}</Text>;
+      }}
+    />
+  </>
+);
+const Screenshots = (item) => (
+  <>
+    <FlatList
+      // horizontal
+      numColumns={3}
+      data={item.screenshots}
+      listKey={(game, index) => game.url}
+      renderItem={({ item, index }) => {
         return (
-          <Text style={{ flexDirection: "column", flexBasis: 100 }}>
-            {item.name}
-          </Text>
+          <Image
+            style={{ width: 125, height: 125, margin: 5 }}
+            source={{ uri: `http:${item.url}` }}
+          />
         );
       }}
     />
@@ -94,18 +104,13 @@ const windowWidth = Dimensions.get("window").width;
 const GameDetailScreen = ({ route }) => {
   const [gameDetails, setGameDetails] = useState([]);
   const [expanded, setExpanded] = useState(true);
-  const [open, setOpen] = useState(true);
-  const [secondExanded, setSecondExpanded] = useState(true);
-  const handlePress = () => setExpanded(!expanded);
-  const handlePress2 = () => setOpen(!open);
-  const handlePress3 = () => setSecondExpanded(!SecondExpanded);
 
   const { id } = route.params;
+
   useEffect(() => {
     getGameDetails(
-      `fields id, name, summary, genres.name, total_rating, first_release_date, cover.url, game_modes.name, cover.image_id, genres.name, platforms.name; where id = ${id};`
+      `fields id, name, summary, genres.name, rating,  total_rating, screenshots.url, first_release_date, cover.url, game_modes.name, cover.image_id, genres.name, platforms.name; where id = ${id};`
     );
-    console.log("called");
   }, []);
 
   const getGameDetails = async (Mbody) => {
@@ -131,7 +136,6 @@ const GameDetailScreen = ({ route }) => {
     }
   };
 
-  const dispatch = useDispatch();
   return (
     <>
       <FlatList
@@ -140,7 +144,7 @@ const GameDetailScreen = ({ route }) => {
         keyExtractor={(game, index) => game.id.toString()}
         renderItem={({ item }) => {
           return (
-            <SafeAreaView style={{ flex: 1 }}>
+            <SafeAreaView style={{ flex: 1, backgroundColor: "#555c63" }}>
               <ParallaxScroll
                 style={{ flex: 1 }}
                 parallaxHeaderHeight={500}
@@ -153,12 +157,13 @@ const GameDetailScreen = ({ route }) => {
 
                 <View
                   style={{
-                    height: 1000,
+                    height: 600,
                     flexDirection: "column",
                     justifyContent: "flex-start",
                     width: windowWidth,
                   }}
                 >
+                  <Spacer />
                   <Collapse
                     isExpanded={true}
                     onToggle={() => setExpanded(!expanded)}
@@ -167,7 +172,7 @@ const GameDetailScreen = ({ route }) => {
                       <Text style={styles.headerText}>Summary</Text>
                     </CollapseHeader>
                     <CollapseBody>
-                      <Text>{item.summary}</Text>
+                      <Text style={styles.summary}>{item.summary}</Text>
                     </CollapseBody>
                   </Collapse>
                   <Spacer />
@@ -177,12 +182,19 @@ const GameDetailScreen = ({ route }) => {
                     onToggle={() => setExpanded(!expanded)}
                   >
                     <CollapseHeader>
-                      <Text style={styles.headerText}>Release Date</Text>
+                      <Text style={styles.headerText}>
+                        Release Date & Rating
+                      </Text>
                     </CollapseHeader>
-                    <CollapseBody>
-                      <Text style={styles.content}>{`Released ${new Date(
-                        item.first_release_date * 1000
-                      ).toDateString("en-US")}`}</Text>
+                    <CollapseBody style={{ flexDirection: "column" }}>
+                      <Text style={styles.content}>
+                        {`Released ${new Date(
+                          item.first_release_date * 1000
+                        ).toDateString("en-US")}`}{" "}
+                      </Text>
+                      <Text style={styles.content}>
+                        rating: {Math.floor(item.rating)} / 100
+                      </Text>
                     </CollapseBody>
                   </Collapse>
                   <Spacer />
@@ -212,24 +224,14 @@ const GameDetailScreen = ({ route }) => {
                     </CollapseBody>
                   </Collapse>
                   <Spacer />
+                  <View style={{ flexDirection: "column", flexWrap: "wrap" }}>
+                    {Screenshots(item)}
+                  </View>
                 </View>
               </ParallaxScroll>
             </SafeAreaView>
           );
         }}
-      />
-      <Button
-        style={{
-          position: "absolute",
-          bottom: 50,
-          right: 0,
-          left: 0,
-          backgroundColor: "#f6f6f6",
-          padding: 20,
-        }}
-        title="logout"
-        /// TODO LOGOUT a USER
-        onPress={() => dispatch(signOutUser())}
       />
     </>
   );
@@ -247,10 +249,22 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontSize: 20,
     marginBottom: 10,
+    color: "white",
   },
   content: {
     alignSelf: "center",
-    fontSize: 18,
+    color: "white",
+    color: "#e8f1fa",
+  },
+  summary: {
+    alignSelf: "center",
+    color: "white",
+    padding: 20,
+    color: "#e8f1fa",
+  },
+  fixedHeader: {
+    color: "white",
+    fontSize: 20,
   },
   date: {
     fontSize: 18,
@@ -264,7 +278,8 @@ const styles = StyleSheet.create({
     width: windowWidth,
     padding: 10,
     fontSize: 20,
-    alignItems: "center",
+    fontWeight: "bold",
+    color: "#1a2d7d",
   },
   stickyHeader: {
     height: headerSize,

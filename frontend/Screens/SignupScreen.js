@@ -1,30 +1,45 @@
 import React, { useState, useEffect } from "react";
 import { Text, Button, Input } from "react-native-elements";
-import { View, SafeAreaView, StyleSheet } from "react-native";
+import { View, SafeAreaView, StyleSheet, Image } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { authSelector, clearState, signUp } from "../redux/AuthSlice";
-import * as SecureStore from "expo-secure-store";
+import { authSelector, signUp } from "../redux/AuthSlice";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const SignupScreen = ({ navigation }) => {
   const [userState, setState] = useState({
+    userName: "",
     userEmail: "",
     userPassword: "",
   });
   const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   const dispatch = useDispatch();
-  const { isSuccess, isError, errorMessage, token } = useSelector(authSelector);
+  const { errorMessage } = useSelector(authSelector);
 
-  //   if (isError) {
-  //     dispatch(clearState());
-  //   }
-  // }, [isSuccess, isError]);
-  console.log("ERRROOOOOOOR", errorMessage);
   return (
-    <SafeAreaView>
-      <View style={styles.container}>
-        <Text h3 h3Style={{ alignSelf: "center", marginBottom: 50 }}>
-          Sign Up
+    <SafeAreaView style={styles.container}>
+      <View>
+        <Image
+          source={require("../../assets/Logo.jpeg")}
+          style={{
+            width: 90,
+            height: 90,
+            borderRadius: 30,
+            alignSelf: "center",
+          }}
+        />
+        <Text h3 h3Style={styles.headerTitle}>
+          Create New Account
         </Text>
+        <Input
+          leftIcon={{ type: "font-awesome", name: "user" }}
+          label="Username"
+          placeholder="John Doe"
+          value={userState.userName}
+          onChangeText={(userName) => setState({ ...userState, userName })}
+          autoCapitalize="none"
+          autoCorrect={false}
+          required
+        />
         <Input
           leftIcon={{ type: "font-awesome", name: "envelope-square" }}
           label="Email Address"
@@ -48,14 +63,18 @@ const SignupScreen = ({ navigation }) => {
           secureTextEntry
           required
         />
-        {errorMessage ? <Text>{errorMessage}</Text> : null}
+        {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
         {reg.test(userState.userEmail) !== true ? (
           <Button disabled title="Sign Up" />
         ) : (
           <Button title="Sign Up" onPress={() => dispatch(signUp(userState))} />
         )}
-        <Text>Already have an account? </Text>
-        <Button title="Sign In" onPress={() => navigation.push("signIn")} />
+        <TouchableOpacity onPress={() => navigation.push("signIn")}>
+          <Text style={styles.link}>
+            {" "}
+            Already have an account? Go to Sign In page!
+          </Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -63,7 +82,27 @@ const SignupScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 100,
+    paddingTop: 50,
+    backgroundColor: "#dbeaff",
+    flex: 1,
+  },
+  link: {
+    color: "#2e7eff",
+
+    width: 200,
+    alignSelf: "center",
+    marginTop: 10,
+  },
+  error: {
+    fontSize: 18,
+    alignSelf: "center",
+    marginBottom: 20,
+  },
+  headerTitle: {
+    alignSelf: "center",
+    marginBottom: 50,
+    borderBottomColor: "black",
+    borderBottomWidth: 1,
   },
 });
 

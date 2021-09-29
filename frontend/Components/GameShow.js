@@ -4,6 +4,8 @@ import { AntDesign } from "react-native-vector-icons";
 
 import { Text, Image, Button } from "react-native-elements";
 
+import { useSelector } from "react-redux";
+
 const GameShow = ({ game, addGameToList, title, token }) => {
   return (
     <View style={styles.container}>
@@ -24,30 +26,26 @@ const GameShow = ({ game, addGameToList, title, token }) => {
 
         {game.platforms[0].name ? (
           <Text style={styles.text}>{game.platforms[0].name}</Text>
-        ) : (
-          <Text style={styles.text}>hey</Text>
-        )}
+        ) : null}
         <Text style={styles.text}>
           {" "}
           Released:
           {new Date(game.first_release_date * 1000).toDateString("en-US")}
         </Text>
       </View>
-      {title !== "My Games" ? (
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "flex-end",
-            flex: 1,
-          }}
-        >
-          <Button
-            buttonStyle={styles.move}
-            icon={<AntDesign name="plus" size={22} style={styles.btn_style} />}
-            onPress={() => addGameToList({ ...game, token })}
-          />
-        </View>
-      ) : null}
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "flex-end",
+          flex: 1,
+        }}
+      >
+        <Button
+          buttonStyle={styles.move}
+          icon={<AntDesign name="plus" size={22} style={styles.btn_style} />}
+          onPress={() => addGameToList({ ...game, token })}
+        />
+      </View>
     </View>
   );
 };
@@ -71,17 +69,8 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "bold",
     marginLeft: 10,
-
+    alignSelf: "center",
     color: "white",
-  },
-  platform: {
-    color: "peru",
-    zIndex: 1,
-    marginLeft: 10,
-    position: "absolute",
-    marginTop: 10,
-    fontWeight: "bold",
-    width: 200,
   },
   move: {
     width: 20,

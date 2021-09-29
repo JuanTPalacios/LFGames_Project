@@ -27,15 +27,3 @@ export const getGameInfo = async (Mbody) => {
     console.log(err);
   }
 };
-
-export const getMyGames = async (api, body) => {
-  const response = await fetch(URL + api, {
-    method: "GET",
-    headers: {
-      "Client-ID": `${CLIENT_ID}`,
-      Authorization: `Bearer ${API_TOKEN}`,
-      "content-type": "text/plain",
-    },
-  });
-  return await response.json();
-};
