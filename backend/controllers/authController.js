@@ -3,6 +3,17 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const blacklist = [];
 
+// style
+// add err logs
+// write validation functions -- pw length and such
+// check for existing username
+// update bcrypt salt styling
+// change 'existingUser' var name
+// replace process.env.secret
+// add err logging to err msgs
+// move some of these functions to userController
+
+
 const signUp = async (req, res) => {
   try {
     const { userEmail, userPassword, userName } = req.body;
@@ -91,3 +102,4 @@ module.exports = {
   signOutUser,
   blacklist,
 };
+

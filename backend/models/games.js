@@ -21,16 +21,12 @@ const gameSchema = new mongoose.Schema({
   genres: {
     type: Array
   },
-    
-  
   platforms: {
     type: Array
   },
-  
   first_release_date: {
     type: Number
   },
-  
   completed: {
     type: Boolean,
     default: false
@@ -42,3 +38,9 @@ const gameSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model("Games", gameSchema);
+
+// user: user ref
+// find out where we're getting these games
+// user -> users? array?
+// relational db migrate?
+// look into changing cover.url for sake of consistency

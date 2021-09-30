@@ -6,13 +6,16 @@ const { blacklist } = require('../controllers/authController')
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
+
   if (!authorization) {
     return res.status(401).send({ error: "you must be logged in" });
   }
+
   const token = authorization.replace("Bearer ","");
+
   if (blacklist.includes(token)) {
    return res.status(402).send({message: 'Unverified'})
-  } 
+  }
 
   jwt.verify(token, process.env.SECRET, async (err, payload) => {
     if (err) {
@@ -27,4 +30,5 @@ module.exports = (req, res, next) => {
   });
 };
 
-
+// clean style
+// remove require dotenv

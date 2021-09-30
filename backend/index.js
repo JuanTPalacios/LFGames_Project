@@ -5,7 +5,10 @@ const authRouter = require("./routes/authRoutes");
 const gameRouter = require("./routes/gamesRoutes");
 const app = express();
 const PORT = process.env.PORT || 3005;
-const db = require("./db");
+
+// implement cors
+// new .env vars
+// add config file to do our .env stuff
 
 app.use(express.json());
 app.use(authRouter);

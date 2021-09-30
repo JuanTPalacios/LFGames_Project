@@ -10,6 +10,8 @@ import { getGameInfo } from "../redux/FetchCalls.js/GameApi.js/GameFetch";
 // import { gamepad } from "react-native-vector-icons/FontAwesome";
 import { gameSelector } from "../redux/GameSlice";
 
+// set up services
+
 import {
   Menu,
   MenuOptions,

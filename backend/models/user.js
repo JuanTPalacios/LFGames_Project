@@ -24,3 +24,5 @@ const userSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model("User", userSchema);
+
+// check games init with [] vs {} or w/e
