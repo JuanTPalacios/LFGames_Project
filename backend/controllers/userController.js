@@ -43,7 +43,7 @@ const createUser = async (req, res) => {
     });
 
     const token = jwt.sign({ userId: newUser._id }, ACCESS_TOKEN_SECRET);
-    res.status(200).send({ user: existingUser, token });
+    res.status(200).send({ user: newUser, token });
   } catch (err) {
     console.log(err);
     return res.status(422).send(err.message);
