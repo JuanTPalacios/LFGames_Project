@@ -1,7 +1,6 @@
 const jwt = require("jsonwebtoken");
-const mongoose = require("mongoose");
 const User = require("../models/user");
-require("dotenv").config();
+const { ACCESS_TOKEN_SECRET } = require('../config');
 const { blacklist } = require('../controllers/authController')
 
 module.exports = (req, res, next) => {
@@ -17,7 +16,7 @@ module.exports = (req, res, next) => {
    return res.status(402).send({message: 'Unverified'})
   }
 
-  jwt.verify(token, process.env.SECRET, async (err, payload) => {
+  jwt.verify(token, ACCESS_TOKEN_SECRET, async (err, payload) => {
     if (err) {
       return res.status(401).send({ error: "you must be logged in" });
     }
