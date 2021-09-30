@@ -28,6 +28,3 @@ module.exports = (req, res, next) => {
     next();
   });
 };
-
-// clean style
-// remove require dotenv
