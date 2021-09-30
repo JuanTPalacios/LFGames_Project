@@ -1,5 +1,7 @@
 const { ACCESS_TOKEN_SECRET } = require('../config');
 const User = require("../models/user");
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 // add some user functions here
 // make changeUserNameOrEmail either nonexistent or practical
