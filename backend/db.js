@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
+const { MONGOURI } = require('./config');
 
-const mongoUri = `mongodb+srv://${process.env.USERNAME}:${process.env.PASSWORD}@cluster0.ngetw.mongodb.net/${process.env.DATABASE}?retryWrites=true&w=majority`;
-
-mongoose.connect(mongoUri);
+mongoose.connect(MONGOURI);
 
 mongoose.connection.on("connected", () => {
   console.log("connected to MongoDb");
