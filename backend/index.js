@@ -6,8 +6,6 @@ const app = express();
 const { PORT } = require('./config');
 
 // implement cors
-// new .env vars
-// add config file to do our .env stuff
 
 app.use(express.json());
 app.use(authRouter);
