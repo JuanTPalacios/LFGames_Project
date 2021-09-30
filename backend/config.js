@@ -5,7 +5,8 @@ const config = {
   USERNAME: process.env.USERNAME,
   PASSWORD: process.env.PASSWORD,
   DATABASE: process.env.DATABASE,
-  ACCESS_TOKEN_SECRET: process.env.SECRET
+  ACCESS_TOKEN_SECRET: process.env.SECRET,
+  MONGOURI: process.env.MONGOURI
 };
 
 module.exports = config;
