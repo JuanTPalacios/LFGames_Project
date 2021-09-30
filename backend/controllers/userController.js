@@ -12,12 +12,11 @@ const updateUser = async (req, res) => {
     const user = await User.findById(userEmail)
     if(!user) return res.status(422).send({error: 'Must be signed in'})
     const updatedUser = User.findByIdAndUpdate(userEmail, {userName, userEmail})
-
     await updatedUser.save()
     return res.status(200).send({user});
-
   } catch (err) {
     console.log(err)
+    res.send(500).send(err.message);
   }
 };
 
@@ -27,35 +26,38 @@ const createUser = async (req, res) => {
     if (!userEmail || !userPassword || !userName) {
       return res.status(422).send({ error: "Must provide email and password" });
     }
+
+    // TODO: fix to check for existing userName? or allow duplicate usernames?
     const user = await User.findOne({ email: userEmail });
     if (user) {
-      return res
-        .status(422)
-        .send({ error: "Email already exists, Try again" });
+      return res.status(422).send({ error: "Email already exists, Try again" });
     }
-    const salt = bcrypt.genSaltSync(10);
-    const hash = bcrypt.hashSync(userPassword, salt);
 
-    const existingUser = await User.create({
+    const hashedPassword = bcrypt.hashSync(userPassword, 10);
+    const newUser = await User.create({
       userName,
       email: userEmail,
-      password: hash,
+      password: hashedPassword,
     });
-    const token = jwt.sign({ userId: existingUser._id }, ACCESS_TOKEN_SECRET);
+
+    const token = jwt.sign({ userId: newUser._id }, ACCESS_TOKEN_SECRET);
     res.status(200).send({ user: existingUser, token });
   } catch (err) {
+    console.log(err);
     return res.status(422).send(err.message);
   }
 };
 
 const getUser = async (req, res) => {
   try {
+    // TODO: fix unused token here.
     const { _id } = req.user;
     const token = req.token;
     const user = await User.findById(_id);
     if (!user) res.send(422).send({ error: "No user found" });
     return res.status(200).send({ user, token });
   } catch {
+    console.log(err);
     return res.status(404).send({ error: "Resource not found" });
   }
 };
