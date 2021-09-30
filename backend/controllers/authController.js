@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
+const { ACCESS_TOKEN_SECRET } = require("../config");
 const blacklist = [];
 
 // style
@@ -9,9 +10,9 @@ const blacklist = [];
 // check for existing username
 // update bcrypt salt styling
 // change 'existingUser' var name
-// replace process.env.secret
 // add err logging to err msgs
 // move some of these functions to userController
+// change to persistant blacklist
 
 
 const signUp = async (req, res) => {
@@ -34,7 +35,7 @@ const signUp = async (req, res) => {
       email: userEmail,
       password: hash,
     });
-    const token = jwt.sign({ userId: existingUser._id }, process.env.SECRET);
+    const token = jwt.sign({ userId: existingUser._id }, ACCESS_TOKEN_SECRET);
     res.status(200).send({ user: existingUser, token });
   } catch (err) {
     return res.status(422).send(err.message);
@@ -58,7 +59,7 @@ const signIn = async (req, res) => {
         return res.status(422).send({ error: "Invalid email or password" });
       }
       if (isValid) {
-        const token = jwt.sign({ userId: user._id }, process.env.SECRET, {
+        const token = jwt.sign({ userId: user._id }, ACCESS_TOKEN_SECRET, {
           expiresIn: "7d",
         });
         return res.status(200).send({ token, user });
