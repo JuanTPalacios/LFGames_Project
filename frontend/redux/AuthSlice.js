@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { signInOldUser, signUpUser } from "./FetchCalls.js/AuthFetch";
+import { signInOldUser, signUpUser } from "../Services/FetchCalls.js/AuthFetch";
 const URL = "http://192.168.2.16:3000/";
 
 //Sign Up User

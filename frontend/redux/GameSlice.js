@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
-import { getMyGames } from "./FetchCalls.js/GameApi.js/GameFetch";
+import { getMyGames } from "../Services/FetchCalls.js/GameApi.js/GameFetch";
 import { CLIENT_ID, API_TOKEN } from "@env";
 
 const URL = "http://192.168.2.16:3000/";

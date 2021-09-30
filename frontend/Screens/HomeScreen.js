@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { MaterialCommunityIcons, AntDesign } from "react-native-vector-icons";
 import { getMyGameInfo } from "../redux/GameSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getGameInfo } from "../redux/FetchCalls.js/GameApi.js/GameFetch";
+import { getGameInfo } from "../Services/FetchCalls.js/GameApi.js/GameFetch";
 // import { gamepad } from "react-native-vector-icons/FontAwesome";
 import { gameSelector } from "../redux/GameSlice";
 

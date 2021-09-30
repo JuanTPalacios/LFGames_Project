@@ -22,9 +22,10 @@ import {
 } from "react-native";
 import ParallaxScroll from "../Components/ParallaxScroll";
 import Spacer from "../Components/Spacer";
-
+import getGameDetails from '../Services/FetchCalls.js/GameApi.js/GameFetch'
 import { signOutUser, clearState } from "../redux/UserSlice";
 import { useDispatch } from "react-redux";
+
 const renderParallaxHeader = (item) => {
   return (
     <Image
@@ -101,40 +102,21 @@ const Screenshots = (item) => (
 const headerSize = 50;
 const windowWidth = Dimensions.get("window").width;
 
+const setDetailsParams = (id) => {
+  return `fields id, name, summary, genres.name, rating,  total_rating, screenshots.url, first_release_date, cover.url, game_modes.name, cover.image_id, genres.name, platforms.name; where id = ${id};`
+} 
+
 const GameDetailScreen = ({ route }) => {
   const [gameDetails, setGameDetails] = useState([]);
   const [expanded, setExpanded] = useState(true);
 
   const { id } = route.params;
+  const detailsParams = setDetailsParams(id);
 
   useEffect(() => {
-    getGameDetails(
-      `fields id, name, summary, genres.name, rating,  total_rating, screenshots.url, first_release_date, cover.url, game_modes.name, cover.image_id, genres.name, platforms.name; where id = ${id};`
-    );
+    setGameDetails(getGameDetails(detailsParams));
   }, []);
 
-  const getGameDetails = async (Mbody) => {
-    try {
-      const response = await fetch("https://api.igdb.com/v4/" + "games", {
-        method: "POST",
-        headers: {
-          "Client-ID": `${CLIENT_ID}`,
-          Authorization: `Bearer ${API_TOKEN}`,
-          "content-type": "text/plain",
-        },
-        body: Mbody,
-      });
-      const data = await response.json();
-      data.map((game) => {
-        if (game.cover) {
-          game.cover.url = `http://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg`;
-        }
-      });
-      setGameDetails(data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   return (
     <>
