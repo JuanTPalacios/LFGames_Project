@@ -5,13 +5,10 @@ const { ACCESS_TOKEN_SECRET } = require("../config");
 const blacklist = [];
 
 // style
-// add err logs
 // write validation functions -- pw length and such
 // check for existing username
 // update bcrypt salt styling
 // change 'existingUser' var name
-// add err logging to err msgs
-// move some of these functions to userController
 // change to persistant blacklist
 
 const signIn = async (req, res) => {
@@ -38,6 +35,7 @@ const signIn = async (req, res) => {
       }
     });
   } catch (err) {
+    console.log(err);
     return res.status(422).send(err.message);
   }
 };
@@ -51,13 +49,13 @@ const signOutUser = async (req, res) => {
     blacklist.push(token)
     return res.status(200).send({message: 'Successfully signed out'});
   } catch (err) {
+    console.log(err);
     res.status(422).send({error: err.message})
   }
 };
 
 module.exports = {
   signIn,
-  getUser,
   signOutUser,
 };
 
