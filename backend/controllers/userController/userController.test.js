@@ -23,7 +23,7 @@ describe ('Integration tests', () => {
   });
   
   afterEach(async () => {
-    await User.deleteMany();
+    //await User.deleteMany();
   });
   
   afterAll((done) => {
