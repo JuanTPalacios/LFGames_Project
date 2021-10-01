@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
-const User = require("../models/user");
+const User = require("../../models/user");
 const bcrypt = require("bcrypt");
-const { ACCESS_TOKEN_SECRET } = require("../config");
+const { ACCESS_TOKEN_SECRET } = require("../../config");
 const blacklist = [];
 
 const signIn = async (req, res) => {

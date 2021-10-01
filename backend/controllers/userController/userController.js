@@ -1,5 +1,5 @@
-const { ACCESS_TOKEN_SECRET } = require('../config');
-const User = require("../models/user");
+const { ACCESS_TOKEN_SECRET } = require('../../config');
+const User = require("../../models/user");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 

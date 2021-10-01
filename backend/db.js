@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { MONGOURI } = require('./config');
+console.log(MONGOURI);
 
 mongoose.connect(MONGOURI);
 

@@ -1,6 +1,6 @@
 const express = require("express");
 const authMiddleWare = require("../Middlewares/authMiddleware");
-const userController = require('../controllers/userController')
+const userController = require('../controllers/userController/userController')
 const router = express.Router();
 
 router.patch('/user', authMiddleWare, userController.updateUser);
