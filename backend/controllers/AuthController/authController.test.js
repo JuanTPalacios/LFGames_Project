@@ -41,21 +41,11 @@ describe ('Authcontroller tests', () => {
   
   describe('Login', () => {
     it('should sign in valid users', async () => {
-      //await User.create({
-      //  userName: 'timboslice',
-      //  email: 'timbo@slice.com',
-      //  password: bcrypt.hashSync(validUser.userPassword, 10)
-      //});
       const res = await request.post('/signin').send(validUser);
       expect(res.status).toBe(200);
     });
 
     it('should reject invalid passwords', async () => {
-      //await User.create({
-      //  userName: 'timboslice',
-      //  email: 'timbo@slice.com',
-      //  password: bcrypt.hashSync(validUser.userPassword, 10)
-      //});
       const res = await request.post('/signin').send({
         userEmail: 'timbo@slice.com',
         userName: 'whocares',
