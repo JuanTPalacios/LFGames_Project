@@ -1,17 +1,16 @@
-
 import express from 'express';
 const router = require('../../routes/userRoutes');
 import supertest from 'supertest';
 const User = require('../../models/user');
 const cfg = require('../../config');
 import mongoose from 'mongoose';
-const { jest } = require('jest');
-import { exportAllDeclaration, jsxAttribute, jsxEmptyExpression } from '@babel/types';
+import { JsonWebTokenError } from 'jsonwebtoken';
+import { afterAll, it } from 'jest-circus';
 
 const validUser = {
   userEmail: 'idiot@idiot.com',
   userName: 'billyBob',
-  userPassword: 'bob123'
+  userPassword: 'bob1232394898'
 };
 
 describe ('Integration tests', () => {
@@ -26,6 +25,11 @@ describe ('Integration tests', () => {
   
   afterEach(async () => {
     await User.deleteMany();
+  });
+  
+  afterAll((done) => {
+    mongoose.connection.close();
+    done();
   });
   
   it('should save a user to the database', (done) => {
@@ -82,9 +86,19 @@ describe ('Integration tests', () => {
         userEmail: 'email@email.com',
         userPassword: 'badpass'
       });
-      const newUser = await User.find({ email: 'email@email.com'});
+      const newUser = await User.find({ email: 'email@email.com' });
+      expect(res.status).toBe(422);
       expect(newUser.length).toBe(0);
       done();
     })();
-  })
+  });
+  
+  it('should hash user passwords', (done) => {
+    (async () => {
+      await request.post('/user').send(validUser);
+      const user = await User.find({ email: validUser.email });
+      expect(user.userPassword).toBe(5);
+      done();
+    })();
+  });
 });
