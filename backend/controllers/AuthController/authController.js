@@ -17,7 +17,7 @@ const signIn = async (req, res) => {
     }
 
     bcrypt.compare(password, user.password, (err, isValid) => {
-      if (err) {
+      if (!isValid || err) {
         return res.status(422).send({ error: "Invalid email or password" });
       }
       if (isValid) {
