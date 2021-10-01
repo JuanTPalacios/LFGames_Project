@@ -87,9 +87,9 @@ const CustomDrawer = (props) => {
             source={require("./assets/Logo.jpeg")}
             style={{ width: 80, height: 80, borderRadius: 30 }}
           />
-          <View> 
-          <Text style={{fontSize: 18, fontWeight: 'boldç'}}>{userName}</Text>
-          
+          <View>
+          <Text style={{fontSize: 18, fontWeight: 'bold'}}>{userName}</Text>
+
           <Text>{email}</Text>
 
           </View>
@@ -116,7 +116,7 @@ const CustomDrawer = (props) => {
 function App() {
   const { isSuccess, isError, errorMessage, token, isFetching, isAuthenticated } = useSelector(authSelector);
   return (
-    <SafeAreaProvider> 
+    <SafeAreaProvider>
     <MenuProvider>
       <NavigationContainer>
         {isFetching ? (
@@ -136,7 +136,7 @@ function App() {
                 name="drawer"
                 component={DrawerStack}
                 options={{ headerShown: false }}
-               
+
               />
             )}
             <Stack.Screen name="Details" component={GameDetailScreen} />

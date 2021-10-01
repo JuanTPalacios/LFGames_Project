@@ -1,3 +1,5 @@
+import { CLIENT_ID, API_TOKEN, LOCAL_URL } from "@env";
+
 import React, { useEffect, useState } from "react";
 import {
   Collapse,
@@ -17,8 +19,7 @@ import {
 } from "react-native";
 import ParallaxScroll from "../Components/ParallaxScroll";
 import Spacer from "../Components/Spacer";
-import getGameDetails from '../Services/FetchCalls.js/GameApi.js/GameFetch'
-
+import { getGameInfo, getGameDetails } from '../Services/FetchCalls.js/GameApi.js/GameFetch'
 const renderParallaxHeader = (item) => {
   return (
     <Image
@@ -97,7 +98,7 @@ const windowWidth = Dimensions.get("window").width;
 
 const setDetailsParams = (id) => {
   return `fields id, name, summary, genres.name, rating,  total_rating, screenshots.url, first_release_date, cover.url, game_modes.name, cover.image_id, genres.name, platforms.name; where id = ${id};`
-} 
+}
 
 const GameDetailScreen = ({ route }) => {
   const [gameDetails, setGameDetails] = useState([]);
@@ -107,12 +108,22 @@ const GameDetailScreen = ({ route }) => {
   const detailsParams = setDetailsParams(id);
 
   useEffect(() => {
-    setGameDetails(getGameDetails(detailsParams));
+    gameDetailsHandler()
+
   }, []);
+
+  async function gameDetailsHandler () {
+    const res = await getGameDetails(detailsParams);
+    if (res) {
+      setGameDetails(res)
+    }
+  }
+
 
 
   return (
     <>
+     {console.log(gameDetails[0])}
       <FlatList
         horizontal
         data={gameDetails}

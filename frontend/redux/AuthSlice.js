@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { signInOldUser, signUpUser } from "../Services/FetchCalls.js/AuthFetch";
-const URL = "http://192.168.2.16:3000/";
+const URL = "http://192.168.1.100:3000/";
 
 //Sign Up User
 export const signUp = createAsyncThunk("auth/signUp", async (body) => {
@@ -105,7 +105,7 @@ export const authSlice = createSlice({
       })
       .addCase(signInUser.rejected, (state, payload) => {
         state.isFetching = false;
-        state.errorMessage = payload.payload.error;
+        state.errorMessage = payload.payload?.error;
       });
     builder
       .addCase(signOutUser.pending, (state) => {
