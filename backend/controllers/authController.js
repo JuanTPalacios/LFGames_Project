@@ -4,13 +4,6 @@ const bcrypt = require("bcrypt");
 const { ACCESS_TOKEN_SECRET } = require("../config");
 const blacklist = [];
 
-// style
-// write validation functions -- pw length and such
-// check for existing username
-// update bcrypt salt styling
-// change 'existingUser' var name
-// change to persistant blacklist
-
 const signIn = async (req, res) => {
   const { userEmail: email, userPassword: password, userName } = req.body;
 

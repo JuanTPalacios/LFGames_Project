@@ -1,7 +1,7 @@
 //import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { LOCAL_URL } from "@env";
-const URL = "http://192.168.1.100:3000/";
-
+const URL = LOCAL_URL;
+console.log(URL)
 export const signUpUser = async (api, body) => {
   const response = await fetch(URL + 'user', {
     method: "POST",
@@ -15,7 +15,7 @@ export const signUpUser = async (api, body) => {
 };
 
 // Sign In
- 
+
 export const signInOldUser = async (api, body) => {
   const response = await fetch(URL + 'signin', {
     method: "POST",

@@ -1,7 +1,8 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const { ACCESS_TOKEN_SECRET } = require('../config');
-const { blacklist } = require('../controllers/authController')
+// const { blacklist } = require('../controllers/authController')
+const blacklist = [];
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;

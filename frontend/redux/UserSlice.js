@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { LOCAL_URL } from "@env"
 
-const URL = "http://192.168.2.16:3000/";
+const URL = LOCAL_URL;
+console.log(URL)
 
 export const fetchUserByToken = createAsyncThunk(
   "user/fetchUserByToken",

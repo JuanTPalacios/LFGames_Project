@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { LOCAL_URL } from "@env"
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { signInOldUser, signUpUser } from "../Services/FetchCalls.js/AuthFetch";
-const URL = "http://192.168.1.100:3000/";
+const URL = LOCAL_URL;
 
 //Sign Up User
 export const signUp = createAsyncThunk("auth/signUp", async (body) => {

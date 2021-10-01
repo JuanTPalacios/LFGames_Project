@@ -1,6 +1,6 @@
 import { CLIENT_ID, API_TOKEN, LOCAL_URL } from "@env";
-console.log(CLIENT_ID, API_TOKEN);
-const URL = "http://192.168.2.16:3000/";
+const URL = LOCAL_URL;
+console.log('gamefetch', URL)
 
 export const getGameInfo = async (Mbody) => {
   console.log('ping from getgameinfo')
@@ -33,7 +33,6 @@ export const getGameInfo = async (Mbody) => {
 export const getGameDetails = async (gameDetails) => {
   try {
     console.log('ping from getgamedetails')
-    console.log('gameDetails', CLIENT_ID, API_TOKEN)
     const response = await fetch("https://api.igdb.com/v4/" + "games", {
       method: "POST",
       headers: {

@@ -123,7 +123,6 @@ const GameDetailScreen = ({ route }) => {
 
   return (
     <>
-     {console.log(gameDetails[0])}
       <FlatList
         horizontal
         data={gameDetails}
