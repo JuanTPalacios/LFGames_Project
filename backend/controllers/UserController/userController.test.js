@@ -23,7 +23,7 @@ describe ('Integration tests', () => {
   });
   
   afterEach(async () => {
-    //await User.deleteMany();
+    await User.deleteMany();
   });
   
   afterAll((done) => {
@@ -43,8 +43,9 @@ describe ('Integration tests', () => {
       const res = await request.post('/user').send({ 
         userName: 'fuck', 
         userEmail: 'idiot@idiot.com',
-        userPassword: 'fuckjavascript123'});
-        expect(res.body.error).toBe('Email already exists, Try again');
+        userPassword: 'fuckjavascript123'
+      });
+      expect(res.body.error).toBe('Email already exists, Try again');
       const users = await User.find({ email: validUser.userEmail });
       expect(users.length).toBe(1);
     });

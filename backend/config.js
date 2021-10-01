@@ -4,7 +4,6 @@ const config = {
   PORT: process.env.PORT || '3000',
   ENV: process.env.ENV || 'test',
   ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET || null,
-  MONGOURI: process.env.MONGOURI
 };
 
 if (config.env === 'test') {
