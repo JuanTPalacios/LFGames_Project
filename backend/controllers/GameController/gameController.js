@@ -1,5 +1,5 @@
-const Games = require("../models/games");
-const User = require("../models/user");
+const Games = require("../../models/games");
+const User = require("../../models/user");
 
 // style
 // fix destructuring? no need for it?

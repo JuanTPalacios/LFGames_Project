@@ -1,7 +1,7 @@
 const express = require("express");
 
 const authMiddleWare = require("../Middlewares/authMiddleware");
-const gameController = require('../controllers/gameController')
+const gameController = require('../controllers/GameController/gameController');
 const router = express.Router();
 
 //change endpoints to /games for both
