@@ -35,6 +35,10 @@ const createUser = async (req, res) => {
       return res.status(422).send({ error: "Email already exists, Try again" });
     }
 
+    if (userPassword.length < 8) {
+      return res.status(422).send({ error: 'Password must be at least eight characters' });
+    }
+
     const hashedPassword = bcrypt.hashSync(userPassword, 10);
     const newUser = await User.create({
       userName,

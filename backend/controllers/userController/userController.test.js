@@ -4,8 +4,6 @@ import supertest from 'supertest';
 const User = require('../../models/user');
 const cfg = require('../../config');
 import mongoose from 'mongoose';
-import { JsonWebTokenError } from 'jsonwebtoken';
-import { afterAll, it } from 'jest-circus';
 
 const validUser = {
   userEmail: 'idiot@idiot.com',
@@ -47,7 +45,7 @@ describe ('Integration tests', () => {
       const res = await request.post('/user').send({ 
         userName: 'fuck', 
         userEmail: 'idiot@idiot.com',
-        userPassword: 'fuck javascript123'});
+        userPassword: 'fuckjavascript123'});
         expect(res.body.error).toBe('Email already exists, Try again');
       const users = await User.find({ email: validUser.userEmail });
       expect(users.length).toBe(1);
@@ -97,7 +95,7 @@ describe ('Integration tests', () => {
     (async () => {
       await request.post('/user').send(validUser);
       const user = await User.find({ email: validUser.email });
-      expect(user.userPassword).toBe(5);
+      expect(user.userPassword).not.toBe(validUser.userPassword);
       done();
     })();
   });
