@@ -1,5 +1,7 @@
-import { CLIENT_ID, API_TOKEN } from "@env";
+import { CLIENT_ID, API_TOKEN, LOCAL_URL } from "@env";
+console.log(LOCAL_URL);
 const URL = "http://192.168.2.16:3000/";
+console.log(CLIENT_ID);
 
 export const getGameInfo = async (Mbody) => {
   try {

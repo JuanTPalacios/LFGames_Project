@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { CLIENT_ID, API_TOKEN } from "@env";
-import { Provider as PaperProvider } from "react-native-paper";
-import { List } from "react-native-paper";
 import {
   Collapse,
   CollapseHeader,
   CollapseBody,
-  AccordionList,
 } from "accordion-collapse-react-native";
 
 import {
@@ -18,13 +14,10 @@ import {
   Animated,
   SafeAreaView,
   Text,
-  Button,
 } from "react-native";
 import ParallaxScroll from "../Components/ParallaxScroll";
 import Spacer from "../Components/Spacer";
 import getGameDetails from '../Services/FetchCalls.js/GameApi.js/GameFetch'
-import { signOutUser, clearState } from "../redux/UserSlice";
-import { useDispatch } from "react-redux";
 
 const renderParallaxHeader = (item) => {
   return (

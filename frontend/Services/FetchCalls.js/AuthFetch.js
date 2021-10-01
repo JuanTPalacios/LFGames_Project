@@ -1,8 +1,10 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-const URL = "http://192.168.2.16:3000/";
+//import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { LOCAL_URL } from "@env";
+const URL = "http://192.168.0.10:3000/";
+console.log(LOCAL_URL);
 
 export const signUpUser = async (api, body) => {
-  const response = await fetch(URL + api, {
+  const response = await fetch(URL + 'user', {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -16,7 +18,7 @@ export const signUpUser = async (api, body) => {
 // Sign In
 
 export const signInOldUser = async (api, body) => {
-  const response = await fetch(URL + api, {
+  const response = await fetch(URL + 'signin', {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -26,5 +28,3 @@ export const signInOldUser = async (api, body) => {
   });
   return await response.json();
 };
-
-
