@@ -4,9 +4,8 @@ const authMiddleWare = require("../Middlewares/authMiddleware");
 const gameController = require('../controllers/GameController/gameController');
 const router = express.Router();
 
-//change endpoints to /games for both
 
-router.post("/addGame", authMiddleWare, gameController.addGameToList);
+router.post("/games", authMiddleWare, gameController.addGameToList);
 router.get("/games", authMiddleWare, gameController.getAllGames);
 
 
