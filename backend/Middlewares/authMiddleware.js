@@ -14,7 +14,7 @@ module.exports = (req, res, next) => {
   const token = authorization.replace("Bearer ","");
 
   if (blacklist.includes(token)) {
-   return res.status(402).send({message: 'Unverified'})
+   return res.status(402).send({ error: 'Unverified'})
   }
 
   jwt.verify(token, ACCESS_TOKEN_SECRET, async (err, payload) => {
