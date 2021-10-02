@@ -43,8 +43,9 @@ describe('gameController tests', () => {
   afterEach(async () => {
     await Games.deleteMany();
   });
-
-  afterAll((done) => {
+  
+  afterAll( (done) => {
+    (async () => {await User.deleteMany();})
     mongoose.connection.close();
     done();
   });
