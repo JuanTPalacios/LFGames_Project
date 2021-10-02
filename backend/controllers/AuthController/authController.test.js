@@ -34,21 +34,11 @@ describe ('Authcontroller tests', () => {
   
   describe('Login', () => {
     it('should sign in valid users', async () => {
-      //await User.create({
-      //  userName: 'timboslice',
-      //  email: 'timbo@slice.com',
-      //  password: bcrypt.hashSync(validUser.userPassword, 10)
-      //});
       const res = await request.post('/signin').send(validUser);
       expect(res.status).toBe(200);
     });
 
     it('should reject invalid passwords', async () => {
-      //await User.create({
-      //  userName: 'timboslice',
-      //  email: 'timbo@slice.com',
-      //  password: bcrypt.hashSync(validUser.userPassword, 10)
-      //});
       const res = await request.post('/signin').send({
         userEmail: 'timbo@slice.com',
         userName: 'whocares',
@@ -79,6 +69,30 @@ describe ('Authcontroller tests', () => {
       expect(res2.status).toBe(422);
       expect(res3.status).toBe(422);
       expect(res4.status).toBe(422);
+    });
+  });
+  
+  describe('Logout', () => {
+    // create user
+    beforeEach(async () => {
+      const user = await User.create({
+        userName: 'fucko',
+        email: 'bigdummy@dummy.com',
+        password: bcrypt.hashSync('thisisapassword', 10)
+      });
+      console.log(user);
+
+
+    });
+    
+    // delete user
+    afterEach(async () => {
+
+    });
+    
+    it('should add jwt to the blacklist', async () => {
+
+      expect(0).toBe(1);
     });
   });
 });
