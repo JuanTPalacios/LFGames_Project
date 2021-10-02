@@ -42,6 +42,7 @@ const renderStickyHeader = (value) => {
     outputRange: [0, 0, 1],
     extrapolate: "clamp",
   });
+  
   return (
     <View style={styles.stickyHeader}>
       <Animated.View style={[styles.stickyHeaderBackground, { opacity }]} />

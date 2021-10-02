@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { CLIENT_ID, API_TOKEN } from "@env";
-import { View, StyleSheet, ActivityIndicator } from "react-native";
+import { View, StyleSheet, ActivityIndicator, SafeAreaView, TextInput } from "react-native";
 import { Input } from "react-native-elements";
 import { useSelector, useDispatch } from "react-redux";
 import { MaterialCommunityIcons, AntDesign } from "react-native-vector-icons";
@@ -25,11 +25,13 @@ import { fetchUserByToken } from "../redux/UserSlice";
 const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const [games, setGames] = useState([]);
+  const [searchValue, setSearchValue] = useState('');
 
   const [text, setText] = useState("");
   // const { isSuccess, isError, errorMessage, token } = useSelector(authSelector);
   const { isFetching, isAuthenticated, isSuccess } = useSelector(authSelector);
   const { userGames } = useSelector(gameSelector);
+  
   useEffect(() => {
     fetchUser();
   }, [isAuthenticated, isSuccess]);
@@ -63,32 +65,14 @@ const HomeScreen = ({ navigation }) => {
     setGames(res);
   };
 
-  const handleSearch = async (value) => {
-    try {
-      const response = await fetch("https://api.igdb.com/v4/" + "games", {
-        method: "POST",
-        headers: {
-          "Client-ID": `${CLIENT_ID}`,
-          Authorization: `Bearer ${API_TOKEN}`,
-          "content-type": "text/plain",
-        },
-        body: `fields name, summary,slug, genres.name, total_rating, first_release_date, game_modes.name, storyline, platforms.name, cover.url, cover.image_id; where slug = "${value}";`,
-      });
-      const data = await response.json();
-      data.map((game) => {
-        if (game.cover) {
-          game.cover.url = `http://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg`;
-        } else {
-          game.cover = {
-            url: "hi",
-          };
-        }
-      });
-      // setGames(data);
-    } catch (err) {
-      console.log(err);
+  const handleSearch = () => {
+    if (searchValue) {
+      const re = new RegExp(searchValue, 'i');
+      const filteredGames = games.filter((game) => re.test(game.name))
+      setGames(filteredGames);
     }
   };
+
   // Sets up buton on right side of header
   const icon = <AntDesign name="search1" size={24} />;
 
@@ -112,6 +96,14 @@ const HomeScreen = ({ navigation }) => {
                   />
                 </MenuTrigger>
                 <MenuOptions>
+                  <MenuOption
+                    onSelect={() =>
+                      getInfo(
+                        "fields name, summary, genres.name, rating, first_release_date, game_modes.name, storyline, platforms.name, cover.url, cover.image_id; where release_dates.platform = (6, 48, 55, 167, 169, 49); limit 200;"
+                      )
+                    }
+                    text="All"
+                  />
                   <MenuOption
                     onSelect={() =>
                       getInfo(
@@ -166,12 +158,14 @@ const HomeScreen = ({ navigation }) => {
           });
         }, [navigation]),
         (
-          <View style={{ flex: 1, backgroundColor: "#555c63" }}>
+          <SafeAreaView style={{ flex: 1, backgroundColor: "#555c63" }}>
             <Input
               placeholder="Search..."
               leftIcon={icon}
-              onSubmitEditing={(value) => handleSearch(value)}
-            ></Input>
+              onChangeText={text => setSearchValue(text)}
+              onSubmitEditing={() => handleSearch()}
+              value={searchValue}
+            />
 
             <GameList
               // token={token}
@@ -179,7 +173,7 @@ const HomeScreen = ({ navigation }) => {
               games={games}
               userGames={userGames}
             />
-          </View>
+          </SafeAreaView>
         ))
       )}
     </>
