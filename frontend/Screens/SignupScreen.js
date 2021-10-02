@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Text, Button, Input } from "react-native-elements";
 import { View, SafeAreaView, StyleSheet, Image } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
@@ -72,7 +72,7 @@ const SignupScreen = ({ navigation }) => {
         <TouchableOpacity onPress={() => navigation.push("signIn")}>
           <Text style={styles.link}>
             {" "}
-            Already have an account? Go to Sign In page!
+            Already have an account? Go to the Sign In page!
           </Text>
         </TouchableOpacity>
       </View>
