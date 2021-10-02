@@ -20,8 +20,8 @@ import {
 } from "react-native-popup-menu";
 import GameList from "../Components/GameList";
 import { authSelector, clearState, signUp } from "../redux/AuthSlice";
-
 import { fetchUserByToken } from "../redux/UserSlice";
+
 const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const [games, setGames] = useState([]);
@@ -35,6 +35,7 @@ const HomeScreen = ({ navigation }) => {
   }, [isAuthenticated, isSuccess]);
 
   const fetchUser = async () => {
+    console.log('ping from fetchUser @HomeScreen')
     try {
       const token = dispatch(
         fetchUserByToken({ token: await AsyncStorage.getItem("token") })
@@ -60,34 +61,6 @@ const HomeScreen = ({ navigation }) => {
   const getInfo = async (Mbody) => {
     const res = await getGameInfo(Mbody);
     setGames(res);
-  };
-
-  //GET games for platforms
-  const getGamesForPlatform = async (Mbody) => {
-    try {
-      const response = await fetch("https://api.igdb.com/v4/" + "games", {
-        method: "POST",
-        headers: {
-          "Client-ID": `${CLIENT_ID}`,
-          Authorization: `Bearer ${API_TOKEN}`,
-          "content-type": "text/plain",
-        },
-        body: Mbody,
-      });
-      const data = await response.json();
-      data.map((game) => {
-        if (game.cover) {
-          game.cover.url = `http://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg`;
-        } else {
-          game.cover = {
-            url: "hi",
-          };
-        }
-      });
-      setGames(data);
-    } catch (err) {
-      console.log(err);
-    }
   };
 
   const handleSearch = async (value) => {
@@ -118,6 +91,7 @@ const HomeScreen = ({ navigation }) => {
   };
   // Sets up buton on right side of header
   const icon = <AntDesign name="search1" size={24} />;
+
   return (
     <>
       {isFetching ? (
@@ -140,7 +114,7 @@ const HomeScreen = ({ navigation }) => {
                 <MenuOptions>
                   <MenuOption
                     onSelect={() =>
-                      getGamesForPlatform(
+                      getInfo(
                         "fields *, platforms.name, cover.url, cover.image_id; where release_dates.platform = 6; limit 200;"
                       )
                     }
@@ -148,7 +122,7 @@ const HomeScreen = ({ navigation }) => {
                   />
                   <MenuOption
                     onSelect={() =>
-                      getGamesForPlatform(
+                      getInfo(
                         "fields *, platforms.name, cover.url, cover.image_id; where release_dates.platform = 49; limit 200;"
                       )
                     }
@@ -156,7 +130,7 @@ const HomeScreen = ({ navigation }) => {
                   />
                   <MenuOption
                     onSelect={() =>
-                      getGamesForPlatform(
+                      getInfo(
                         "fields *, platforms.name, cover.url, cover.image_id; where release_dates.platform = 48; limit 200;"
                       )
                     }
@@ -164,7 +138,7 @@ const HomeScreen = ({ navigation }) => {
                   />
                   <MenuOption
                     onSelect={() =>
-                      getGamesForPlatform(
+                      getInfo(
                         "fields *, platforms.name, cover.url, cover.image_id; where release_dates.platform = 167; limit 200;"
                       )
                     }
@@ -172,7 +146,7 @@ const HomeScreen = ({ navigation }) => {
                   />
                   <MenuOption
                     onSelect={() =>
-                      getGamesForPlatform(
+                      getInfo(
                         "fields *, platforms.name, cover.url, cover.image_id; where release_dates.platform = 169; limit 200;"
                       )
                     }
@@ -180,7 +154,7 @@ const HomeScreen = ({ navigation }) => {
                   />
                   <MenuOption
                     onSelect={() =>
-                      getGamesForPlatform(
+                      getInfo(
                         "fields name, summary, id, platforms.name, cover.url, cover.image_id; where release_dates.platform = 55; limit 200;"
                       )
                     }
