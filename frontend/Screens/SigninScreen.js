@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 import { Text, Button, Input } from "react-native-elements";
 import { View, SafeAreaView, StyleSheet, Image } from "react-native";
 import { authSelector } from "../redux/AuthSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { signInUser, clearState } from "../redux/AuthSlice";
+import { signInUser } from "../redux/AuthSlice";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 const SigninScreen = ({ navigation }) => {
@@ -14,14 +14,13 @@ const SigninScreen = ({ navigation }) => {
     userEmail: "",
     userPassword: "",
   });
+
   const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-
   const { errorMessage } = useSelector(authSelector);
-
   const dispatch = useDispatch();
 
   return (
-    <SafeAreaView style={styles.container}>
+  <SafeAreaView style={styles.container}>
       <View>
         <Image
           source={require("../../assets/Logo.jpeg")}
