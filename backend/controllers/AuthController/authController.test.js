@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken';
 const router = require('../../routes/authRoutes');
 const userRouter = require('../../routes/userRoutes');
 const User = require('../../models/user');
+const Blacklist = require('../../models/blacklist');
 const cfg = require('../../config');
 
 const validUser = {
@@ -14,7 +15,7 @@ const validUser = {
   userEmail: 'timbo@slice.com'
 };
 
-describe ('Authcontroller tests', () => {
+describe('Authcontroller tests', () => {
   const app = express();
   app.use(express.json());
   app.use(router);
@@ -32,6 +33,7 @@ describe ('Authcontroller tests', () => {
   
   afterAll(async () => {
     await User.deleteMany();
+    await Blacklist.deleteMany(); 
     mongoose.connection.close();
   });
   
@@ -76,22 +78,20 @@ describe ('Authcontroller tests', () => {
   });
   
   describe('Logout', () => {
-    // create user
     beforeAll(async () => {
-      const user = await User.create({
+      await User.create({
         userName: 'fucko',
         email: 'bigdummy@dummy.com',
         password: bcrypt.hashSync('thisisapassword', 10)
       });
     });
     
-    // delete user
     afterAll(async () => {
       await User.deleteMany();
+      await Blacklist.deleteMany();
     });
     
     it('should add jwt to the blacklist', async () => {
-      //login
       const user = await User.findOne({ email: 'bigdummy@dummy.com' });
       const token = await jwt.sign({ userId: user._id }, cfg.ACCESS_TOKEN_SECRET, {
         expiresIn: '1d'
@@ -101,20 +101,28 @@ describe ('Authcontroller tests', () => {
         `Bearer ${token}`
       );
 
-      // logout
       expect(loginRes.status).toBe(200)
       const logoutRes = await request.get('/signout').set(
         'Authorization',
         `Bearer ${token}`
       );
       expect(logoutRes.status).toBe(200);
-      
+      const tokenIsBlacklisted = await Blacklist.find({ token });
+      expect(tokenIsBlacklisted.length).toBe(1);
+    });
+    
+    it('should prevent blacklisted tokens from being authenticated', async () => {
+      const user = await User.findOne({ email: 'bigdummy@dummy.com' });
+      const token = await jwt.sign({ userId: user._id }, cfg.ACCESS_TOKEN_SECRET, {
+        expiresIn: '1d'
+      });
+      await Blacklist.create({ token, user: user._id });
       const badLoginRes = await request.get('/signout').set(
         'Authorization',
         `Bearer ${token}`
       ); 
       expect(badLoginRes.status).toBe(402)
-      expect(badLoginRes.error).toBe('Unverified');
+      expect(badLoginRes.body.error).toBe('Invalid token');
     });
   });
 });
