@@ -1,10 +1,10 @@
 import express from 'express';
-const router = require('../../routes/userRoutes');
+import router from '../../routes/userRoutes';
 import supertest from 'supertest';
-const User = require('../../models/user');
-const cfg = require('../../config');
+import User from '../../models/user';
+import cfg from '../../config';
 import mongoose from 'mongoose';
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 
 const validUser = {
   userEmail: 'idiot@idiot.com',
@@ -124,7 +124,7 @@ describe ('Integration tests', () => {
         'Authorization',
         'Bearer fuckobob.com'
       );
-      expect(res.status).toBe(401);
+      expect(res.status).toBe(402);
     });
   });
 });

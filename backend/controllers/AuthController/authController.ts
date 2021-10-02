@@ -1,12 +1,12 @@
-const jwt = require("jsonwebtoken");
-const User = require("../../models/user");
-const bcrypt = require("bcrypt");
-const Blacklist = require('../../models/blacklist');
-const { ACCESS_TOKEN_SECRET } = require("../../config");
+import jwt from 'jsonwebtoken';
+import { Response, Request } from 'express';
+import User from '../../models/user';
+import Blacklist from '../../models/blacklist';
+import bcrypt from 'bcrypt';
+import cfg from '../../config';
 
-const signIn = async (req, res) => {
+export const signIn = async (req: Request, res: Response) => {
   const { userEmail: email, userPassword: password, userName } = req.body;
-
   if (!email || !password || !userName) {
     return res.status(422).send({ error: "Must provide email and password" });
   }
@@ -16,28 +16,26 @@ const signIn = async (req, res) => {
       return res.status(404).send({ error: "Email not found" });
     }
 
-    bcrypt.compare(password, user.password, (err, isValid) => {
+    bcrypt.compare(password, user.password, (err: Error, isValid: Boolean) => {
       if (!isValid || err) {
         return res.status(422).send({ error: "Invalid email or password" });
       }
       if (isValid) {
-        const token = jwt.sign({ userId: user._id }, ACCESS_TOKEN_SECRET, {
+        const token = jwt.sign({ userId: user._id }, cfg.ACCESS_TOKEN_SECRET, {
           expiresIn: "7d",
         });
         return res.status(200).send({ token, user });
       }
     });
   } catch (err) {
-    console.log(err);
-    return res.status(422).send(err.message);
+    return res.status(500).send('Internal server error');
   }
 };
 
-const signOutUser = async (req, res) => {
+export const signOutUser = async (req: Request, res: Response) => {
   try{
-    const { _id } = req.user;
-    const token = req.token;
-    
+    const _id: string = req.body.user._id;
+    const token: string = req.body.token;
     const user = await User.findById(_id);
     if (!user) return res.status(422).send({ error: "Must be signed In" });
     await Blacklist.create({
@@ -46,13 +44,6 @@ const signOutUser = async (req, res) => {
     });
     return res.status(200).send({message: 'Successfully signed out'});
   } catch (err) {
-    console.log(err);
-    res.status(422).send({error: err.message})
+    res.status(500).send('Error signing out');
   }
 };
-
-module.exports = {
-  signIn,
-  signOutUser,
-};
-

@@ -2,14 +2,12 @@ import express from 'express';
 import supertest from 'supertest';
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
-const router = require('../../routes/gamesRoutes');
-const userRouter = require('../../routes/gamesRoutes');
-const Games = require('../../models/games');
-const User = require('../../models/user');
-const cfg = require('../../config');
-const jwt = require('jsonwebtoken');
-
-
+import router from '../../routes/gamesRoutes';
+import userRouter from '../../routes/gamesRoutes';
+import Games from '../../models/games';
+import User from '../../models/user';
+import cfg from '../../config';
+import jwt from 'jsonwebtoken';
 
 const validGame = {game: {
     name: 'PONG',
@@ -84,7 +82,7 @@ describe('gameController tests', () => {
 
     it('should have all necessary fields', async () => {
       const user = await User.findOne({ email: 'Jimbo@slice.com' });
-      const token = await jwt.sign({ userId: user._id }, cfg.ACCESS_TOKEN_SECRET, {
+      const token = jwt.sign({ userId: user._id }, cfg.ACCESS_TOKEN_SECRET, {
         expiresIn: '1d'
       });
       const res = await request.post('/games').send({
@@ -110,15 +108,14 @@ describe('gameController tests', () => {
     });
 
     it('token should match a valid user', async () => {
-      const token = await jwt.sign({ userId: 1 }, cfg.ACCESS_TOKEN_SECRET, {
+      const token = jwt.sign({ userId: 1 }, cfg.ACCESS_TOKEN_SECRET, {
         expiresIn: '1d'
       });
       const res = await request.post('/games').send(validGame).set(
         'Authorization',
         `Bearer ${token}`
       );
-      expect(res.status).toBe(500);
-      expect(res.body.error).toBe('Error validating user');
+      expect(res.status).toBe(402);
     });
   });
 });

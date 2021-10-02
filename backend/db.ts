@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
-const { MONGOURI } = require('./config');
+import cfg from './config';
+import mongoose from "mongoose";
 
-mongoose.connect(MONGOURI);
+mongoose.connect(cfg.MONGOURI);
 
 mongoose.connection.on("connected", () => {
   console.log("connected to MongoDb");

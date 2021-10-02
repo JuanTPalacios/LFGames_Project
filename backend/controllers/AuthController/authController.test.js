@@ -3,11 +3,11 @@ import supertest from 'supertest';
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-const router = require('../../routes/authRoutes');
-const userRouter = require('../../routes/userRoutes');
-const User = require('../../models/user');
-const Blacklist = require('../../models/blacklist');
-const cfg = require('../../config');
+import router from '../../routes/authRoutes';
+import userRouter from '../../routes/userRoutes';
+import User from '../../models/user';
+import Blacklist from '../../models/blacklist';
+import cfg from '../../config';
 
 const validUser = {
   userName: 'timboslice',
@@ -122,7 +122,6 @@ describe('Authcontroller tests', () => {
         `Bearer ${token}`
       ); 
       expect(badLoginRes.status).toBe(402)
-      expect(badLoginRes.body.error).toBe('Invalid token');
     });
   });
 });

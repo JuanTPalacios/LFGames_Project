@@ -1,6 +1,17 @@
-const mongoose = require("mongoose");
-const User = require('./user')
+import mongoose from 'mongoose';
 
+interface IGame {
+  gameId: number,
+  name: string,
+  'cover.url': string,
+  total_rating: number,
+  cover_image_id: string,
+  genres: string[],
+  platforms: string[],
+  first_release_date: number,
+  completed: boolean,
+  user: mongoose.Schema.Types.ObjectId
+}
 
 const gameSchema = new mongoose.Schema({
   gameId: {
@@ -37,7 +48,8 @@ const gameSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Games", gameSchema);
+const model = mongoose.model("Games", gameSchema);
+export default model;
 
 // user: user ref
 // find out where we're getting these games
