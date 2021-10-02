@@ -31,21 +31,23 @@ describe('gameController tests', () => {
 
   beforeAll( async () => {
     mongoose.connect(cfg.MONGOURI, { useNewURlParser: true });
+  });
+  
+  beforeEach(async () => {
     await User.create({
       userName: 'Jimboslice',
       email: 'Jimbo@slice.com',
       password: bcrypt.hashSync('password', 10)
     });
-  });
+  })
 
   afterEach(async () => {
     await Games.deleteMany();
+    await User.deleteMany();
   });
   
-  afterAll( (done) => {
-    (async () => {await User.deleteMany();})
+  afterAll(async () => {
     mongoose.connection.close();
-    done();
   });
 
   describe('Add a game', () => {
@@ -103,8 +105,7 @@ describe('gameController tests', () => {
 
     it('user should be logged in', async () => {
       const res = await request.post('/games').send(validGame);
-      expect(res.status).toBe(401);
-      expect(res.body.error).toBe("you must be logged in");
+      expect(res.status).toBe(402);
     });
 
     it('token should match a valid user', async () => {

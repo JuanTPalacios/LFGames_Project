@@ -115,7 +115,7 @@ describe ('Integration tests', () => {
           'Authorization',
           `Bearer ${token}`
         ); 
-        expect(res.status).toBe(401);
+        expect(res.status).toBe(402);
       }, 55);
     });
 

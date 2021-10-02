@@ -7,7 +7,7 @@ import cfg from '../config';
 export default async (req: Request, res: Response, next: NextFunction) => {
   const authorization: string | undefined = req.headers.authorization;
   if (!authorization) {
-    return res.status(401).send({ error: "you must be logged in" });
+    return res.status(402).send({ error: "you must be logged in" });
   }
   const token: string = authorization.replace("Bearer ","");
   
