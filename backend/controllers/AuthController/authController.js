@@ -1,8 +1,8 @@
 const jwt = require("jsonwebtoken");
 const User = require("../../models/user");
 const bcrypt = require("bcrypt");
+const Blacklist = require('../../models/blacklist');
 const { ACCESS_TOKEN_SECRET } = require("../../config");
-const blacklist = [];
 
 const signIn = async (req, res) => {
   const { userEmail: email, userPassword: password, userName } = req.body;
@@ -37,9 +37,13 @@ const signOutUser = async (req, res) => {
   try{
     const { _id } = req.user;
     const token = req.token;
+    
     const user = await User.findById(_id);
     if (!user) return res.status(422).send({ error: "Must be signed In" });
-    blacklist.push(token)
+    await Blacklist.create({
+      token,
+      user: user._id
+    });
     return res.status(200).send({message: 'Successfully signed out'});
   } catch (err) {
     console.log(err);
