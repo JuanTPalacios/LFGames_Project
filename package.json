@@ -11,7 +11,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "test": "jest --runInBand"
+    "test": "jest --runInBand",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.15.8",
@@ -46,6 +47,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
+    "husky": "^7.0.2",
     "jest": "^27.2.4",
     "prettier": "^2.4.1",
     "supertest": "^6.1.6"
