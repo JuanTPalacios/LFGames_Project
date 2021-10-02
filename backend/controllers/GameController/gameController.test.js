@@ -34,8 +34,8 @@ describe('gameController tests', () => {
   beforeAll( async () => {
     mongoose.connect(cfg.MONGOURI, { useNewURlParser: true });
     await User.create({
-      userName: 'timboslice',
-      email: 'timbo@slice.com',
+      userName: 'Jimboslice',
+      email: 'Jimbo@slice.com',
       password: bcrypt.hashSync('password', 10)
     });
   });
@@ -51,7 +51,7 @@ describe('gameController tests', () => {
 
   describe('Add a game', () => {
     it('should save a game to the database', async () => {
-      const user = await User.findOne({ email: 'timbo@slice.com' });
+      const user = await User.findOne({ email: 'Jimbo@slice.com' });
       const token = await jwt.sign({ userId: user._id }, cfg.ACCESS_TOKEN_SECRET, {
         expiresIn: '1d'
       });
@@ -64,7 +64,7 @@ describe('gameController tests', () => {
     });
 
     it('should not allow game duplicates', async () => {
-      const user = await User.findOne({ email: 'timbo@slice.com' });
+      const user = await User.findOne({ email: 'Jimbo@slice.com' });
       const token = await jwt.sign({ userId: user._id }, cfg.ACCESS_TOKEN_SECRET, {
         expiresIn: '1d'
       });
@@ -82,7 +82,7 @@ describe('gameController tests', () => {
     });
 
     it('should have all necessary fields', async () => {
-      const user = await User.findOne({ email: 'timbo@slice.com' });
+      const user = await User.findOne({ email: 'Jimbo@slice.com' });
       const token = await jwt.sign({ userId: user._id }, cfg.ACCESS_TOKEN_SECRET, {
         expiresIn: '1d'
       });
@@ -116,11 +116,10 @@ describe('gameController tests', () => {
         'Authorization',
         `Bearer ${token}`
       );
-      expect(res.status).toBe(422);
-      expect(res.body.error).toBe('Could not find an existing account');
+      expect(res.status).toBe(500);
+      expect(res.body.error).toBe('Error validating user');
     });
   });
 });
-
 
 

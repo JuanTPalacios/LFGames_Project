@@ -19,7 +19,6 @@ module.exports = (req, res, next) => {
     const { userId } = payload;
     try {
       const user = await User.findById(userId);
-      if(!user) return res.status(422).send({error: 'Could not find an existing account'})
       const userBlacklist = await Blacklist.find({ token, user: user._id });
       if (userBlacklist.length > 0) {
         res.status(402).send({ error: 'Invalid token' });
