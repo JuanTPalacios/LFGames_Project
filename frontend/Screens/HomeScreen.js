@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { CLIENT_ID, API_TOKEN } from "@env";
-import { View, StyleSheet, ActivityIndicator, SafeAreaView, TextInput } from "react-native";
+import { View, StyleSheet, ActivityIndicator, SafeAreaView } from "react-native";
 import { Input } from "react-native-elements";
 import { useSelector, useDispatch } from "react-redux";
 import { MaterialCommunityIcons, AntDesign } from "react-native-vector-icons";
 import { getMyGameInfo } from "../redux/GameSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getGameInfo } from "../Services/FetchCalls.js/GameApi.js/GameFetch";
-// import { gamepad } from "react-native-vector-icons/FontAwesome";
 import { gameSelector } from "../redux/GameSlice";
-
-// set up services
 
 import {
   Menu,
@@ -26,9 +22,6 @@ const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const [games, setGames] = useState([]);
   const [searchValue, setSearchValue] = useState('');
-
-  const [text, setText] = useState("");
-  // const { isSuccess, isError, errorMessage, token } = useSelector(authSelector);
   const { isFetching, isAuthenticated, isSuccess } = useSelector(authSelector);
   const { userGames } = useSelector(gameSelector);
   
@@ -70,115 +63,111 @@ const HomeScreen = ({ navigation }) => {
       const re = new RegExp(searchValue, 'i');
       const filteredGames = games.filter((game) => re.test(game.name))
       setGames(filteredGames);
+      setSearchValue('');
     }
   };
-
-  // Sets up buton on right side of header
+  
   const icon = <AntDesign name="search1" size={24} />;
 
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Menu>
+          <MenuTrigger>
+            <MaterialCommunityIcons
+              name="controller-classic"
+              size={26}
+              style={styles.icon}
+            />
+          </MenuTrigger>
+          <MenuOptions>
+            <MenuOption
+              onSelect={() =>
+                getInfo(
+                  "fields name, summary, genres.name, rating, first_release_date, game_modes.name, storyline, platforms.name, cover.url, cover.image_id; where release_dates.platform = (6, 48, 55, 167, 169, 49); limit 200;"
+                )
+              }
+              text="All"
+            />
+            <MenuOption
+              onSelect={() =>
+                getInfo(
+                  "fields *, platforms.name, cover.url, cover.image_id; where release_dates.platform = 6; limit 200;"
+                )
+              }
+              text="PC"
+            />
+            <MenuOption
+              onSelect={() =>
+                getInfo(
+                  "fields *, platforms.name, cover.url, cover.image_id; where release_dates.platform = 49; limit 200;"
+                )
+              }
+              text="Xbox"
+            />
+            <MenuOption
+              onSelect={() =>
+                getInfo(
+                  "fields *, platforms.name, cover.url, cover.image_id; where release_dates.platform = 48; limit 200;"
+                )
+              }
+              text="Ps4"
+            />
+            <MenuOption
+              onSelect={() =>
+                getInfo(
+                  "fields *, platforms.name, cover.url, cover.image_id; where release_dates.platform = 167; limit 200;"
+                )
+              }
+              text="Ps5"
+            />
+            <MenuOption
+              onSelect={() =>
+                getInfo(
+                  "fields *, platforms.name, cover.url, cover.image_id; where release_dates.platform = 169; limit 200;"
+                )
+              }
+              text="Xbox X"
+            />
+            <MenuOption
+              onSelect={() =>
+                getInfo(
+                  "fields name, summary, id, platforms.name, cover.url, cover.image_id; where release_dates.platform = 55; limit 200;"
+                )
+              }
+              text="Mobile"
+            />
+          </MenuOptions>
+        </Menu>
+      ),
+    });
+  }, [navigation])
+
+  if (isFetching) return (
+    <View style={[styles.container, styles.horizontal]}>
+      <ActivityIndicator size="large" color="#00ff00" />
+    </View>
+  )
   return (
     <>
-      {isFetching ? (
-        <View style={[styles.container, styles.horizontal]}>
-          <ActivityIndicator size="large" color="#00ff00" />
-        </View>
-      ) : (
-        // Sets up buton on right side of header
-        (React.useLayoutEffect(() => {
-          navigation.setOptions({
-            headerRight: () => (
-              <Menu>
-                <MenuTrigger>
-                  <MaterialCommunityIcons
-                    name="controller-classic"
-                    size={26}
-                    style={styles.icon}
-                  />
-                </MenuTrigger>
-                <MenuOptions>
-                  <MenuOption
-                    onSelect={() =>
-                      getInfo(
-                        "fields name, summary, genres.name, rating, first_release_date, game_modes.name, storyline, platforms.name, cover.url, cover.image_id; where release_dates.platform = (6, 48, 55, 167, 169, 49); limit 200;"
-                      )
-                    }
-                    text="All"
-                  />
-                  <MenuOption
-                    onSelect={() =>
-                      getInfo(
-                        "fields *, platforms.name, cover.url, cover.image_id; where release_dates.platform = 6; limit 200;"
-                      )
-                    }
-                    text="PC"
-                  />
-                  <MenuOption
-                    onSelect={() =>
-                      getInfo(
-                        "fields *, platforms.name, cover.url, cover.image_id; where release_dates.platform = 49; limit 200;"
-                      )
-                    }
-                    text="Xbox"
-                  />
-                  <MenuOption
-                    onSelect={() =>
-                      getInfo(
-                        "fields *, platforms.name, cover.url, cover.image_id; where release_dates.platform = 48; limit 200;"
-                      )
-                    }
-                    text="Ps4"
-                  />
-                  <MenuOption
-                    onSelect={() =>
-                      getInfo(
-                        "fields *, platforms.name, cover.url, cover.image_id; where release_dates.platform = 167; limit 200;"
-                      )
-                    }
-                    text="Ps5"
-                  />
-                  <MenuOption
-                    onSelect={() =>
-                      getInfo(
-                        "fields *, platforms.name, cover.url, cover.image_id; where release_dates.platform = 169; limit 200;"
-                      )
-                    }
-                    text="Xbox X"
-                  />
-                  <MenuOption
-                    onSelect={() =>
-                      getInfo(
-                        "fields name, summary, id, platforms.name, cover.url, cover.image_id; where release_dates.platform = 55; limit 200;"
-                      )
-                    }
-                    text="Mobile"
-                  />
-                </MenuOptions>
-              </Menu>
-            ),
-          });
-        }, [navigation]),
-        (
-          <SafeAreaView style={{ flex: 1, backgroundColor: "#555c63" }}>
-            <Input
-              placeholder="Search..."
-              leftIcon={icon}
-              onChangeText={text => setSearchValue(text)}
-              onSubmitEditing={() => handleSearch()}
-              value={searchValue}
-            />
+      <SafeAreaView style={{ flex: 1, backgroundColor: "#555c63" }}>
+        <Input
+          placeholder="Search..."
+          leftIcon={icon}
+          onChangeText={text => setSearchValue(text)}
+          onSubmitEditing={() => handleSearch()}
+          value={searchValue}
+        />
 
-            <GameList
-              // token={token}
-              navigation={navigation}
-              games={games}
-              userGames={userGames}
-            />
-          </SafeAreaView>
-        ))
-      )}
+        <GameList
+          navigation={navigation}
+          games={games}
+          userGames={userGames}
+        />
+      </SafeAreaView>
     </>
   );
-};
+}
 
 const styles = StyleSheet.create({
   icon: {
