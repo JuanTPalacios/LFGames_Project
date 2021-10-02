@@ -17,15 +17,19 @@ module.exports = (req, res, next) => {
       return res.status(401).send({ error: "you must be logged in" });
     }
     const { userId } = payload;
-    const user = await User.findById(userId);
-    const userBlacklist = await Blacklist.find({ token, user: user._id });
-    if (userBlacklist.length > 0) {
-      res.status(402).send({ error: 'Invalid token' });
-      return;
+    try {
+      const user = await User.findById(userId);
+      if(!user) return res.status(422).send({error: 'Could not find an existing account'})
+      const userBlacklist = await Blacklist.find({ token, user: user._id });
+      if (userBlacklist.length > 0) {
+        res.status(402).send({ error: 'Invalid token' });
+        return;
+      }
+      req.user = user;
+      req.token = token;
+      next();
+    } catch (err) {
+      res.status(500).send({ error: 'Error validating user' });
     }
-    if(!user) return res.status(422).send({error: 'Could not find an existing account'})
-    req.user = user;
-    req.token = token;
-    next();
   });
 };
