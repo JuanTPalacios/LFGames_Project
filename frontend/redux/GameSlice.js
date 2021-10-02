@@ -10,7 +10,7 @@ export const addGame = createAsyncThunk(
   "game/addGame",
   async (payload, thunkApi) => {
     try {
-      const response = await fetch(URL + "addGame", {
+      const response = await fetch(URL + "games", {
         method: "POST",
         credentials: "include",
         mode: "cors",
