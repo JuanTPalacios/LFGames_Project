@@ -1,25 +1,10 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  TouchableOpacity,
-  Image,
-  Button,
-} from "react-native";
-import {
-  clearGameState,
-  gameSelector,
-  gameSlice,
-  getGameInfo,
-} from "../redux/GameSlice";
-import { useSelector, useDispatch } from "react-redux";
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Image} from "react-native";
+import { gameSelector } from "../redux/GameSlice";
+import { useSelector } from "react-redux";
 import { FlatList } from "react-native-gesture-handler";
-import GameShow from "../Components/GameShow";
 import { authSelector } from "../redux/AuthSlice";
 import { useNavigation } from "@react-navigation/native";
-import { addGame } from "../redux/GameSlice";
 import Spacer from "../Components/Spacer";
 import { AntDesign, Feather } from "react-native-vector-icons";
 
@@ -27,15 +12,16 @@ const MyGamesScreen = (game, route) => {
   const { userGames } = useSelector(gameSelector);
   const { token, isSuccess } = useSelector(authSelector);
   const navigation = useNavigation();
-  // const { id } = route.params;
-
   const [myGames, setMyGames] = useState([]);
+
   useEffect(() => {
     setMyGames(userGames);
   }, [isSuccess]);
-  return (
-    <SafeAreaView style={styles.container1}>
-      {userGames.length < 1 ? (
+
+  // split up the ternary return conditions for clarity
+  if (userGames.length < 1) {
+    return (
+      <SafeAreaView style={styles.container1}>
         <View style={styles.center1}>
           <Image
             source={require("../../assets/Logo.jpeg")}
@@ -52,59 +38,65 @@ const MyGamesScreen = (game, route) => {
             <Text style={{ color: "red" }}> Go back Home</Text>
           </TouchableOpacity>
         </View>
-      ) : (
-        <FlatList
-          data={userGames}
-          keyExtractor={(user, index) => index.toString()}
-          renderItem={({ item }) => {
-            return (
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("Details", { id: item.gameId })
-                }
-              >
-                <View style={styles.container}>
-                  <Image
-                    style={styles.imageStyle}
-                    source={{
-                      uri: item.cover.url,
-                    }}
-                  ></Image>
-                  <View style={styles.center}>
-                    {item.name.length > 25 ? (
-                      <Text style={styles.title}>
-                        {item.name.slice(0, 26).concat("...")}
-                      </Text>
-                    ) : (
-                      <Text style={styles.title}> {item.name} </Text>
-                    )}
-                    <Text style={styles.text}>{item.platforms[0].name} </Text>
-                    <Text style={styles.text}>
-                      Released:
-                      {new Date(item.first_release_date * 1000).toDateString(
-                        "en-US"
-                      )}
+      </SafeAreaView>
+    );
+  }
+
+  // return for a user game list
+  return (
+    <SafeAreaView style={styles.container1}>
+      <FlatList
+        data={userGames}
+        keyExtractor={(user, index) => index.toString()}
+        renderItem={({ item }) => {
+          return (
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("Details", { id: item.gameId })
+              }
+            >
+              <View style={styles.container}>
+                <Image
+                  style={styles.imageStyle}
+                  source={{
+                    uri: item.cover.url,
+                  }}
+                ></Image>
+
+                <View style={styles.center}>
+                  {item.name.length > 25 ? (
+                    <Text style={styles.title}>
+                      {item.name.slice(0, 26).concat("...")}
                     </Text>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        justifyContent: "flex-end",
-                      }}
-                    >
-                      <Text>completed: </Text>
-                      {!item.completed ? (
-                        <Feather name="x" size={26} />
-                      ) : (
-                        <AntDesign name="checkmark-circle" size={26} />
-                      )}
-                    </View>
+                  ) : (
+                    <Text style={styles.title}> {item.name} </Text>
+                  )}
+                  <Text style={styles.text}>{item.platforms[0].name} </Text>
+                  <Text style={styles.text}>
+                    Released:
+                    {new Date(item.first_release_date * 1000).toDateString(
+                      "en-US"
+                    )}
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "flex-end",
+                    }}
+                  >
+                    <Text>completed: </Text>
+                    {!item.completed ? (
+                      <Feather name="x" size={26} />
+                    ) : (
+                      <AntDesign name="checkmark-circle" size={26} />
+                    )}
                   </View>
                 </View>
-              </TouchableOpacity>
-            );
-          }}
-        />
-      )}
+              </View>
+            </TouchableOpacity>
+          );
+        }}
+      />
     </SafeAreaView>
   );
 };

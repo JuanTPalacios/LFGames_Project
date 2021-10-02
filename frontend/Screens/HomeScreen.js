@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { CLIENT_ID, API_TOKEN } from "@env";
-import { View, StyleSheet, ActivityIndicator } from "react-native";
+import { View, StyleSheet, ActivityIndicator, SafeAreaView } from "react-native";
 import { Input } from "react-native-elements";
 import { useSelector, useDispatch } from "react-redux";
 import { MaterialCommunityIcons, AntDesign } from "react-native-vector-icons";
 import { getMyGameInfo } from "../redux/GameSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getGameInfo } from "../Services/FetchCalls.js/GameApi.js/GameFetch";
-// import { gamepad } from "react-native-vector-icons/FontAwesome";
 import { gameSelector } from "../redux/GameSlice";
-
-// set up services
 
 import {
   Menu,
@@ -20,21 +16,21 @@ import {
 } from "react-native-popup-menu";
 import GameList from "../Components/GameList";
 import { authSelector, clearState, signUp } from "../redux/AuthSlice";
-
 import { fetchUserByToken } from "../redux/UserSlice";
+
 const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const [games, setGames] = useState([]);
-
-  const [text, setText] = useState("");
-  // const { isSuccess, isError, errorMessage, token } = useSelector(authSelector);
+  const [searchValue, setSearchValue] = useState('');
   const { isFetching, isAuthenticated, isSuccess } = useSelector(authSelector);
   const { userGames } = useSelector(gameSelector);
+  
   useEffect(() => {
     fetchUser();
   }, [isAuthenticated, isSuccess]);
 
   const fetchUser = async () => {
+    console.log('ping from fetchUser @HomeScreen')
     try {
       const token = dispatch(
         fetchUserByToken({ token: await AsyncStorage.getItem("token") })
@@ -62,155 +58,116 @@ const HomeScreen = ({ navigation }) => {
     setGames(res);
   };
 
-  //GET games for platforms
-  const getGamesForPlatform = async (Mbody) => {
-    try {
-      const response = await fetch("https://api.igdb.com/v4/" + "games", {
-        method: "POST",
-        headers: {
-          "Client-ID": `${CLIENT_ID}`,
-          Authorization: `Bearer ${API_TOKEN}`,
-          "content-type": "text/plain",
-        },
-        body: Mbody,
-      });
-      const data = await response.json();
-      data.map((game) => {
-        if (game.cover) {
-          game.cover.url = `http://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg`;
-        } else {
-          game.cover = {
-            url: "hi",
-          };
-        }
-      });
-      setGames(data);
-    } catch (err) {
-      console.log(err);
+  const handleSearch = () => {
+    if (searchValue) {
+      const re = new RegExp(searchValue, 'i');
+      const filteredGames = games.filter((game) => re.test(game.name))
+      setGames(filteredGames);
+      setSearchValue('');
     }
   };
-
-  const handleSearch = async (value) => {
-    try {
-      const response = await fetch("https://api.igdb.com/v4/" + "games", {
-        method: "POST",
-        headers: {
-          "Client-ID": `${CLIENT_ID}`,
-          Authorization: `Bearer ${API_TOKEN}`,
-          "content-type": "text/plain",
-        },
-        body: `fields name, summary,slug, genres.name, total_rating, first_release_date, game_modes.name, storyline, platforms.name, cover.url, cover.image_id; where slug = "${value}";`,
-      });
-      const data = await response.json();
-      data.map((game) => {
-        if (game.cover) {
-          game.cover.url = `http://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg`;
-        } else {
-          game.cover = {
-            url: "hi",
-          };
-        }
-      });
-      // setGames(data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  // Sets up buton on right side of header
+  
   const icon = <AntDesign name="search1" size={24} />;
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Menu>
+          <MenuTrigger>
+            <MaterialCommunityIcons
+              name="controller-classic"
+              size={26}
+              style={styles.icon}
+            />
+          </MenuTrigger>
+          <MenuOptions>
+            <MenuOption
+              onSelect={() =>
+                getInfo(
+                  "fields name, summary, genres.name, rating, first_release_date, game_modes.name, storyline, platforms.name, cover.url, cover.image_id; where release_dates.platform = (6, 48, 55, 167, 169, 49); limit 200;"
+                )
+              }
+              text="All"
+            />
+            <MenuOption
+              onSelect={() =>
+                getInfo(
+                  "fields *, platforms.name, cover.url, cover.image_id; where release_dates.platform = 6; limit 200;"
+                )
+              }
+              text="PC"
+            />
+            <MenuOption
+              onSelect={() =>
+                getInfo(
+                  "fields *, platforms.name, cover.url, cover.image_id; where release_dates.platform = 49; limit 200;"
+                )
+              }
+              text="Xbox"
+            />
+            <MenuOption
+              onSelect={() =>
+                getInfo(
+                  "fields *, platforms.name, cover.url, cover.image_id; where release_dates.platform = 48; limit 200;"
+                )
+              }
+              text="Ps4"
+            />
+            <MenuOption
+              onSelect={() =>
+                getInfo(
+                  "fields *, platforms.name, cover.url, cover.image_id; where release_dates.platform = 167; limit 200;"
+                )
+              }
+              text="Ps5"
+            />
+            <MenuOption
+              onSelect={() =>
+                getInfo(
+                  "fields *, platforms.name, cover.url, cover.image_id; where release_dates.platform = 169; limit 200;"
+                )
+              }
+              text="Xbox X"
+            />
+            <MenuOption
+              onSelect={() =>
+                getInfo(
+                  "fields name, summary, id, platforms.name, cover.url, cover.image_id; where release_dates.platform = 55; limit 200;"
+                )
+              }
+              text="Mobile"
+            />
+          </MenuOptions>
+        </Menu>
+      ),
+    });
+  }, [navigation])
+
+  if (isFetching) return (
+    <View style={[styles.container, styles.horizontal]}>
+      <ActivityIndicator size="large" color="#00ff00" />
+    </View>
+  )
   return (
     <>
-      {isFetching ? (
-        <View style={[styles.container, styles.horizontal]}>
-          <ActivityIndicator size="large" color="#00ff00" />
-        </View>
-      ) : (
-        // Sets up buton on right side of header
-        (React.useLayoutEffect(() => {
-          navigation.setOptions({
-            headerRight: () => (
-              <Menu>
-                <MenuTrigger>
-                  <MaterialCommunityIcons
-                    name="controller-classic"
-                    size={26}
-                    style={styles.icon}
-                  />
-                </MenuTrigger>
-                <MenuOptions>
-                  <MenuOption
-                    onSelect={() =>
-                      getGamesForPlatform(
-                        "fields *, platforms.name, cover.url, cover.image_id; where release_dates.platform = 6; limit 200;"
-                      )
-                    }
-                    text="PC"
-                  />
-                  <MenuOption
-                    onSelect={() =>
-                      getGamesForPlatform(
-                        "fields *, platforms.name, cover.url, cover.image_id; where release_dates.platform = 49; limit 200;"
-                      )
-                    }
-                    text="Xbox"
-                  />
-                  <MenuOption
-                    onSelect={() =>
-                      getGamesForPlatform(
-                        "fields *, platforms.name, cover.url, cover.image_id; where release_dates.platform = 48; limit 200;"
-                      )
-                    }
-                    text="Ps4"
-                  />
-                  <MenuOption
-                    onSelect={() =>
-                      getGamesForPlatform(
-                        "fields *, platforms.name, cover.url, cover.image_id; where release_dates.platform = 167; limit 200;"
-                      )
-                    }
-                    text="Ps5"
-                  />
-                  <MenuOption
-                    onSelect={() =>
-                      getGamesForPlatform(
-                        "fields *, platforms.name, cover.url, cover.image_id; where release_dates.platform = 169; limit 200;"
-                      )
-                    }
-                    text="Xbox X"
-                  />
-                  <MenuOption
-                    onSelect={() =>
-                      getGamesForPlatform(
-                        "fields name, summary, id, platforms.name, cover.url, cover.image_id; where release_dates.platform = 55; limit 200;"
-                      )
-                    }
-                    text="Mobile"
-                  />
-                </MenuOptions>
-              </Menu>
-            ),
-          });
-        }, [navigation]),
-        (
-          <View style={{ flex: 1, backgroundColor: "#555c63" }}>
-            <Input
-              placeholder="Search..."
-              leftIcon={icon}
-              onSubmitEditing={(value) => handleSearch(value)}
-            ></Input>
+      <SafeAreaView style={{ flex: 1, backgroundColor: "#555c63" }}>
+        <Input
+          placeholder="Search..."
+          leftIcon={icon}
+          onChangeText={text => setSearchValue(text)}
+          onSubmitEditing={() => handleSearch()}
+          value={searchValue}
+        />
 
-            <GameList
-              // token={token}
-              navigation={navigation}
-              games={games}
-              userGames={userGames}
-            />
-          </View>
-        ))
-      )}
+        <GameList
+          navigation={navigation}
+          games={games}
+          userGames={userGames}
+        />
+      </SafeAreaView>
     </>
   );
-};
+}
 
 const styles = StyleSheet.create({
   icon: {
