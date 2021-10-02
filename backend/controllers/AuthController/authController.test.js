@@ -20,20 +20,13 @@ describe ('Authcontroller tests', () => {
   
   beforeAll(async () => {
     mongoose.connect(cfg.MONGOURI, { useNewURlParser: true });
-  });
-  
-  beforeEach(async () => {
     await User.create({
-        userName: 'timboslice',
-        email: 'timbo@slice.com',
-        password: bcrypt.hashSync(validUser.userPassword, 10)
+      userName: 'timboslice',
+      email: 'timbo@slice.com',
+      password: bcrypt.hashSync(validUser.userPassword, 10)
     });
   });
   
-  afterEach(async () => {
-    await User.deleteMany();
-  });
-
   afterAll(async () => {
     await User.deleteMany();
     mongoose.connection.close();
