@@ -48,11 +48,5 @@ const gameSchema = new mongoose.Schema({
   },
 });
 
-const model = mongoose.model("Games", gameSchema);
-export default model;
-
-// user: user ref
-// find out where we're getting these games
-// user -> users? array?
-// relational db migrate?
-// look into changing cover.url for sake of consistency
+const game = mongoose.model<IGame>("Games", gameSchema);
+export default game;
