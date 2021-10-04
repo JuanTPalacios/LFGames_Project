@@ -23,6 +23,8 @@
     "rules": {
         "no-underscore-dangle": 0,
         "import/no-unresolved": 0,
-        "import/extensions": 0
+        "import/extensions": 0,
+        "react/prop-types": 0,
+        "no-use-before-define": "off"
     }
 }

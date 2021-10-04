@@ -1,41 +1,43 @@
-import React, { useState } from "react";
-import Icon from "react-native-vector-icons/FontAwesome";
+import React, { useState } from 'react';
+// import Icon from 'react-native-vector-icons/FontAwesome';
+import { Text, Button, Input } from 'react-native-elements';
+import {
+  View, SafeAreaView, StyleSheet, Image,
+} from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { authSelector, signInUser } from '../redux/AuthSlice';
 
-import { Text, Button, Input } from "react-native-elements";
-import { View, SafeAreaView, StyleSheet, Image } from "react-native";
-import { authSelector } from "../redux/AuthSlice";
-import { useSelector, useDispatch } from "react-redux";
-import { signInUser } from "../redux/AuthSlice";
-import { TouchableOpacity } from "react-native-gesture-handler";
+const img = require('../../assets/Logo.jpeg');
 
 const SigninScreen = ({ navigation }) => {
   const [userState, setUserState] = useState({
-    userName: "",
-    userEmail: "",
-    userPassword: "",
+    userName: '',
+    userEmail: '',
+    userPassword: '',
   });
 
-  const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  const reg = /^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w{2,3})+$/;
   const { errorMessage } = useSelector(authSelector);
   const dispatch = useDispatch();
 
   return (
-  <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View>
         <Image
-          source={require("../../assets/Logo.jpeg")}
+          source={img}
           style={{
             width: 90,
             height: 90,
             borderRadius: 30,
-            alignSelf: "center",
+            alignSelf: 'center',
           }}
         />
         <Text h3 h3Style={styles.headerTitle}>
           Sign In
         </Text>
         <Input
-          leftIcon={{ type: "font-awesome", name: "user" }}
+          leftIcon={{ type: 'font-awesome', name: 'user' }}
           label="username"
           placeholder="John Doe"
           value={userState.userName}
@@ -45,28 +47,24 @@ const SigninScreen = ({ navigation }) => {
           required
         />
         <Input
-          leftIcon={{ type: "font-awesome", name: "envelope-square" }}
+          leftIcon={{ type: 'font-awesome', name: 'envelope-square' }}
           label="Email Address"
           placeholder="email@example.com"
           value={userState.userEmail}
-          onChangeText={(userEmail) =>
-            setUserState({
-              ...userState,
-              userEmail,
-            })
-          }
+          onChangeText={(userEmail) => setUserState({
+            ...userState,
+            userEmail,
+          })}
           autoCapitalize="none"
           autoCorrect={false}
           required
         />
         <Input
-          leftIcon={{ type: "font-awesome", name: "lock" }}
+          leftIcon={{ type: 'font-awesome', name: 'lock' }}
           label="Password"
           placeholder="Password"
           value={userState.userPassword}
-          onChangeText={(userPassword) =>
-            setUserState({ ...userState, userPassword })
-          }
+          onChangeText={(userPassword) => setUserState({ ...userState, userPassword })}
           autoCorrect={false}
           autoCapitalize="none"
           secureTextEntry
@@ -82,7 +80,7 @@ const SigninScreen = ({ navigation }) => {
         )}
         <TouchableOpacity
           title="Sign Up"
-          onPress={() => navigation.navigate("signUp")}
+          onPress={() => navigation.navigate('signUp')}
         >
           <Text style={styles.link}>Dont have an account? Go to Register!</Text>
         </TouchableOpacity>
@@ -94,24 +92,24 @@ const SigninScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     paddingTop: 50,
-    backgroundColor: "#dbeaff",
+    backgroundColor: '#dbeaff',
     flex: 1,
   },
   link: {
-    color: "#2e7eff",
+    color: '#2e7eff',
     width: 200,
-    alignSelf: "center",
+    alignSelf: 'center',
     marginTop: 10,
   },
   error: {
     fontSize: 18,
-    alignSelf: "center",
+    alignSelf: 'center',
     marginBottom: 20,
   },
   headerTitle: {
-    alignSelf: "center",
+    alignSelf: 'center',
     marginBottom: 50,
-    borderBottomColor: "black",
+    borderBottomColor: 'black',
     borderBottomWidth: 1,
   },
 });

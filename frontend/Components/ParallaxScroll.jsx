@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { View, Animated, StyleSheet } from "react-native";
+import React, { Component } from 'react';
+import { View, Animated } from 'react-native';
 
 export class ParallaxScroll extends Component {
   static defaultProps = {
@@ -22,10 +22,10 @@ export class ParallaxScroll extends Component {
   onScroll = ({ value }) => {
     const { onScroll, onSticky, stickyHeaderHeight } = this.props;
 
-    if (typeof onScroll === "function") {
+    if (typeof onScroll === 'function') {
       onScroll(value);
     }
-    if (typeof onSticky === "function") {
+    if (typeof onSticky === 'function') {
       onSticky(value >= stickyHeaderHeight);
     }
   };
@@ -33,7 +33,7 @@ export class ParallaxScroll extends Component {
   renderFixedHeader() {
     const { fixedHeader } = this.props;
 
-    if (typeof fixedHeader !== "function") {
+    if (typeof fixedHeader !== 'function') {
       return null;
     }
 
@@ -41,9 +41,9 @@ export class ParallaxScroll extends Component {
       <View
         style={{
           height: 50,
-          width: "100%",
+          width: '100%',
           padding: 10,
-          justifyContent: "center",
+          justifyContent: 'center',
         }}
       >
         {fixedHeader(this._animatedValue)}
@@ -52,9 +52,9 @@ export class ParallaxScroll extends Component {
   }
 
   renderStickyHeader() {
-    const { stickyHeader, isSectionList } = this.props;
+    const { stickyHeader } = this.props;
 
-    if (typeof stickyHeader !== "function") {
+    if (typeof stickyHeader !== 'function') {
       return null;
     }
 
@@ -62,10 +62,9 @@ export class ParallaxScroll extends Component {
   }
 
   renderParallaxHeader() {
-    const { parallaxHeader, scaleParallaxHeader, parallaxHeaderHeight } =
-      this.props;
+    const { parallaxHeader, scaleParallaxHeader, parallaxHeaderHeight } = this.props;
 
-    if (typeof parallaxHeader !== "function") {
+    if (typeof parallaxHeader !== 'function') {
       return null;
     }
 
@@ -75,7 +74,7 @@ export class ParallaxScroll extends Component {
       const scale = this._animatedValue.interpolate({
         inputRange: [-parallaxHeaderHeight, 0],
         outputRange: [scaleValue * 1.5, 1],
-        extrapolate: "clamp",
+        extrapolate: 'clamp',
       });
       animationStyle = {
         transform: [{ scale }],
@@ -102,12 +101,12 @@ export class ParallaxScroll extends Component {
           },
         },
       ],
-      { useNativeDriver: true }
+      { useNativeDriver: true },
     );
 
     return (
       <View style={{ flex: 1 }}>
-        <View style={{ position: "absolute" }}>{this.renderFixedHeader()}</View>
+        <View style={{ position: 'absolute' }}>{this.renderFixedHeader()}</View>
         <Animated.ScrollView
           ref={onRef}
           {...props}
@@ -124,12 +123,12 @@ export class ParallaxScroll extends Component {
   }
 }
 
-const styles = StyleSheet.create({
-  parralexHeader: {
-    height: 50,
-    width: "100%",
-    padding: 10,
-  },
-});
+// const styles = StyleSheet.create({
+//   parralexHeader: {
+//     height: 50,
+//     width: '100%',
+//     padding: 10,
+//   },
+// });
 
 export default ParallaxScroll;
