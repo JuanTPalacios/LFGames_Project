@@ -2,14 +2,15 @@ import express from 'express';
 import supertest from 'supertest';
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
-import router from '../../routes/gamesRoutes';
-import userRouter from '../../routes/gamesRoutes';
-import Games from '../../models/games';
-import User from '../../models/user';
-import cfg from '../../config';
 import jwt from 'jsonwebtoken';
+import router from '../../routes/gamesRoutes.ts';
+import userRouter from '../../routes/userRoutes.ts';
+import Games from '../../models/games.ts';
+import User from '../../models/user.ts';
+import cfg from '../../config.ts';
 
-const validGame = {game: {
+const validGame = {
+  game: {
     name: 'PONG',
     gameId: 1,
     cover: 'pong-cover.png',
@@ -19,7 +20,7 @@ const validGame = {game: {
     platforms: ['Atari'],
     genres: ['Sports'],
     completed: true,
-  }
+  },
 };
 
 describe('gameController tests', () => {
@@ -29,23 +30,23 @@ describe('gameController tests', () => {
   app.use(userRouter);
   const request = supertest(app);
 
-  beforeAll( async () => {
+  beforeAll(async () => {
     mongoose.connect(cfg.MONGOURI, { useNewURlParser: true });
   });
-  
+
   beforeEach(async () => {
     await User.create({
       userName: 'Jimboslice',
       email: 'Jimbo@slice.com',
-      password: bcrypt.hashSync('password', 10)
+      password: bcrypt.hashSync('password', 10),
     });
-  })
+  });
 
   afterEach(async () => {
     await Games.deleteMany();
     await User.deleteMany();
   });
-  
+
   afterAll(async () => {
     mongoose.connection.close();
   });
@@ -54,11 +55,11 @@ describe('gameController tests', () => {
     it('should save a game to the database', async () => {
       const user = await User.findOne({ email: 'Jimbo@slice.com' });
       const token = await jwt.sign({ userId: user._id }, cfg.ACCESS_TOKEN_SECRET, {
-        expiresIn: '1d'
+        expiresIn: '1d',
       });
       await request.post('/games').send(validGame).set(
         'Authorization',
-        `Bearer ${token}`
+        `Bearer ${token}`,
       );
       const game = await Games.findOne({ gameId: validGame.gameId });
       expect(game.gameId).toBe(validGame.gameId);
@@ -67,15 +68,15 @@ describe('gameController tests', () => {
     it('should not allow game duplicates', async () => {
       const user = await User.findOne({ email: 'Jimbo@slice.com' });
       const token = await jwt.sign({ userId: user._id }, cfg.ACCESS_TOKEN_SECRET, {
-        expiresIn: '1d'
+        expiresIn: '1d',
       });
       await request.post('/games').send(validGame).set(
         'Authorization',
-        `Bearer ${token}`
+        `Bearer ${token}`,
       );
       const res = await request.post('/games').send(validGame).set(
         'Authorization',
-        `Bearer ${token}`
+        `Bearer ${token}`,
       );
       expect(res.body.error).toBe('Already owned!');
       const games = await Games.find({ gameId: validGame.gameId });
@@ -85,7 +86,7 @@ describe('gameController tests', () => {
     it('should have all necessary fields', async () => {
       const user = await User.findOne({ email: 'Jimbo@slice.com' });
       const token = jwt.sign({ userId: user._id }, cfg.ACCESS_TOKEN_SECRET, {
-        expiresIn: '1d'
+        expiresIn: '1d',
       });
       const res = await request.post('/games').send({
         gameId: 1,
@@ -96,9 +97,9 @@ describe('gameController tests', () => {
         platforms: ['Atari'],
         genres: ['Sports'],
         completed: true,
-        }).set(
+      }).set(
         'Authorization',
-        `Bearer ${token}`
+        `Bearer ${token}`,
       );
       expect(res.body.error).toBe('Error found @ gameController');
     });
@@ -110,15 +111,13 @@ describe('gameController tests', () => {
 
     it('token should match a valid user', async () => {
       const token = jwt.sign({ userId: 1 }, cfg.ACCESS_TOKEN_SECRET, {
-        expiresIn: '1d'
+        expiresIn: '1d',
       });
       const res = await request.post('/games').send(validGame).set(
         'Authorization',
-        `Bearer ${token}`
+        `Bearer ${token}`,
       );
       expect(res.status).toBe(402);
     });
   });
 });
-
-
