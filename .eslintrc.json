@@ -1,7 +1,8 @@
 {
     "env": {
         "browser": true,
-        "es2021": true
+        "es2021": true,
+        "jest": true
     },
     "extends": [
         "plugin:react/recommended",
@@ -20,5 +21,8 @@
         "@typescript-eslint"
     ],
     "rules": {
+        "no-underscore-dangle": 0,
+        "import/no-unresolved": 0,
+        "import/extensions": 0
     }
 }

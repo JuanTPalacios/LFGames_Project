@@ -1,46 +1,43 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { LOCAL_URL } from "@env"
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { LOCAL_URL } from '@env';
 
 const URL = LOCAL_URL;
-console.log(URL)
+console.log(URL);
 
 export const fetchUserByToken = createAsyncThunk(
-  "user/fetchUserByToken",
+  'user/fetchUserByToken',
   async ({ token }, thunkAPI) => {
     try {
-      const response = await fetch(URL + "user", {
-        method: "GET",
-        credentials: "include",
-        mode: "cors",
+      const response = await fetch(`${URL}user`, {
+        method: 'GET',
+        credentials: 'include',
+        mode: 'cors',
         headers: {
-          Accept: "application/json",
-          Authorization: "Bearer " + token,
-          "Content-Type": "application/json",
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
       });
-      let data = await response.json();
-      if (response.status === 200) {
-        return data;
-      } else {
-        return thunkAPI.rejectWithValue(data);
-      }
+      const data = await response.json();
+      if (response.status === 200) return data;
+      return thunkAPI.rejectWithValue(data);
     } catch (e) {
       return thunkAPI.rejectWithValue(e);
     }
-  }
+  },
 );
 
 export const userSlice = createSlice({
-  name: "user",
+  name: 'user',
   initialState: {
-    userName: "",
-    email: "",
+    userName: '',
+    email: '',
 
-    token: "",
+    token: '',
     isFetching: false,
     isSuccess: false,
     isError: false,
-    errorMessage: "",
+    errorMessage: '',
   },
 
   reducers: {},

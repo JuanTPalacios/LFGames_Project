@@ -1,70 +1,70 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { LOCAL_URL } from "@env"
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { signInOldUser, signUpUser } from "../Services/FetchCalls.js/AuthFetch";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { LOCAL_URL } from '@env';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { signInOldUser, signUpUser } from '../Services/FetchCalls.js/AuthFetch';
+
 const URL = LOCAL_URL;
 
-//Sign Up User
-export const signUp = createAsyncThunk("auth/signUp", async (body) => {
-  const result = await signUpUser("signup", body);
-  AsyncStorage.setItem("token", result.token);
+// Sign Up User
+export const signUp = createAsyncThunk('auth/signUp', async (body) => {
+  const result = await signUpUser('signup', body);
+  AsyncStorage.setItem('token', result.token);
   return result;
 });
-//Sign In User
-export const signInUser = createAsyncThunk("auth/signInUser", async (body) => {
-  const result = await signInOldUser("signin", body);
-  AsyncStorage.setItem("token", result.token);
+// Sign In User
+export const signInUser = createAsyncThunk('auth/signInUser', async (body) => {
+  const result = await signInOldUser('signin', body);
+  AsyncStorage.setItem('token', result.token);
   return result;
 });
 
 export const signOutUser = createAsyncThunk(
-  "auth/signOutUser",
+  'auth/signOutUser',
   async (payload, thunkAPI) => {
     try {
-      const response = await fetch(URL + "signout", {
-        method: "GET",
-        credentials: "include",
-        mode: "cors",
+      const response = await fetch(`${URL}signout`, {
+        method: 'GET',
+        credentials: 'include',
+        mode: 'cors',
         headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${payload}`,
         },
       });
-      let data = await response.json();
+      const data = await response.json();
       if (response.status === 200) {
-        await AsyncStorage.removeItem("token");
+        await AsyncStorage.removeItem('token');
         return { ...data };
-      } else {
-        return thunkAPI.rejectWithValue(data);
       }
+      return thunkAPI.rejectWithValue(data);
     } catch (e) {
       return thunkAPI.rejectWithValue(e);
     }
-  }
+  },
 );
 
 export const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState: {
-    email: "",
-    userName: "",
-    password: "",
+    email: '',
+    userName: '',
+    password: '',
     isFetching: false,
     isSuccess: false,
-    errorMessage: "",
+    errorMessage: '',
     isAuthenticated: false,
-    token: "",
+    token: '',
   },
 
   reducers: {
     clearState: (state) => {
       (state.isFetching = false),
-        (state.isSuccess = false),
-        (state.errorMessage = ""),
-        (state.token = "");
+      (state.isSuccess = false),
+      (state.errorMessage = ''),
+      (state.token = '');
     },
-    signOut: (state) => (state.isAuthenticated = false),
+    signOut: (state) => { state.isAuthenticated = false; },
   },
   extraReducers: (builder) => {
     builder
@@ -76,7 +76,7 @@ export const authSlice = createSlice({
         state.email = payload.meta.arg.userEmail;
         state.userName = payload.meta.arg.userName;
         state.isAuthenticated = true;
-        state.errorMessage = "";
+        state.errorMessage = '';
         state.token = payload.payload.token;
         state.isSuccess = true;
       })
@@ -101,7 +101,7 @@ export const authSlice = createSlice({
           state.userName = payload.user.userName;
           state.isAuthenticated = true;
           state.token = payload.token;
-          state.errorMessage = "";
+          state.errorMessage = '';
         }
       })
       .addCase(signInUser.rejected, (state, payload) => {
@@ -112,13 +112,13 @@ export const authSlice = createSlice({
       .addCase(signOutUser.pending, (state) => {
         state.isFetching = true;
       })
-      .addCase(signOutUser.fulfilled, (state, { payload }) => {
+      .addCase(signOutUser.fulfilled, (state) => {
         state.isFetching = false;
 
         state.isSuccess = true;
         state.isAuthenticated = false;
       })
-      .addCase(signOutUser.rejected, (state, payload) => {
+      .addCase(signOutUser.rejected, (state) => {
         state.isFetching = false;
       });
   },

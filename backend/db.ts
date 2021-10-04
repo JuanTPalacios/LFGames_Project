@@ -10,4 +10,4 @@ mongoose.connection.on("error", () => {
   console.log("Error connecting to MongoDb");
 });
 
-module.exports = mongoose;
+export default mongoose;

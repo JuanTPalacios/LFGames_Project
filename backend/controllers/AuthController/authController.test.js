@@ -3,16 +3,16 @@ import supertest from 'supertest';
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import router from '../../routes/authRoutes';
-import userRouter from '../../routes/userRoutes';
-import User from '../../models/user';
-import Blacklist from '../../models/blacklist';
-import cfg from '../../config';
+import router from '../../routes/authRoutes.ts';
+import userRouter from '../../routes/userRoutes.ts';
+import User from '../../models/user.ts';
+import Blacklist from '../../models/blacklist.ts';
+import cfg from '../../config.ts';
 
 const validUser = {
   userName: 'timboslice',
   userPassword: 'wowhesacoolguy',
-  userEmail: 'timbo@slice.com'
+  userEmail: 'timbo@slice.com',
 };
 
 describe('Authcontroller tests', () => {
@@ -21,22 +21,22 @@ describe('Authcontroller tests', () => {
   app.use(router);
   app.use(userRouter);
   const request = supertest(app);
-  
+
   beforeAll(async () => {
     mongoose.connect(cfg.MONGOURI, { useNewURlParser: true });
     await User.create({
       userName: 'timboslice',
       email: 'timbo@slice.com',
-      password: bcrypt.hashSync(validUser.userPassword, 10)
+      password: bcrypt.hashSync(validUser.userPassword, 10),
     });
   });
-  
+
   afterAll(async () => {
     await User.deleteMany();
-    await Blacklist.deleteMany(); 
+    await Blacklist.deleteMany();
     mongoose.connection.close();
   });
-  
+
   describe('Login', () => {
     it('should sign in valid users', async () => {
       const res = await request.post('/signin').send(validUser);
@@ -47,7 +47,7 @@ describe('Authcontroller tests', () => {
       const res = await request.post('/signin').send({
         userEmail: 'timbo@slice.com',
         userName: 'whocares',
-        userPassword: 'fuck'
+        userPassword: 'fuck',
       });
       expect(res.status).toBe(422);
     });
@@ -59,11 +59,11 @@ describe('Authcontroller tests', () => {
       };
       const form2 = {
         userName: 'owiejfoiwejf',
-        userPassword: 'woiefjwoeifj'
+        userPassword: 'woiefjwoeifj',
       };
       const form3 = {
         userEmail: 'poo@poo.com',
-        userPassword: 'pickleRickhahahaha'
+        userPassword: 'pickleRickhahahaha',
       };
       const form4 = {};
       const res1 = await request.post('/signin').send(form1);
@@ -76,52 +76,52 @@ describe('Authcontroller tests', () => {
       expect(res4.status).toBe(422);
     });
   });
-  
+
   describe('Logout', () => {
     beforeAll(async () => {
       await User.create({
         userName: 'fucko',
         email: 'bigdummy@dummy.com',
-        password: bcrypt.hashSync('thisisapassword', 10)
+        password: bcrypt.hashSync('thisisapassword', 10),
       });
     });
-    
+
     afterAll(async () => {
       await User.deleteMany();
       await Blacklist.deleteMany();
     });
-    
+
     it('should add jwt to the blacklist', async () => {
       const user = await User.findOne({ email: 'bigdummy@dummy.com' });
       const token = await jwt.sign({ userId: user._id }, cfg.ACCESS_TOKEN_SECRET, {
-        expiresIn: '1d'
+        expiresIn: '1d',
       });
       const loginRes = await request.get('/user').set(
         'Authorization',
-        `Bearer ${token}`
+        `Bearer ${token}`,
       );
 
-      expect(loginRes.status).toBe(200)
+      expect(loginRes.status).toBe(200);
       const logoutRes = await request.get('/signout').set(
         'Authorization',
-        `Bearer ${token}`
+        `Bearer ${token}`,
       );
       expect(logoutRes.status).toBe(200);
       const tokenIsBlacklisted = await Blacklist.find({ token });
       expect(tokenIsBlacklisted.length).toBe(1);
     });
-    
+
     it('should prevent blacklisted tokens from being authenticated', async () => {
       const user = await User.findOne({ email: 'bigdummy@dummy.com' });
       const token = await jwt.sign({ userId: user._id }, cfg.ACCESS_TOKEN_SECRET, {
-        expiresIn: '1d'
+        expiresIn: '1d',
       });
       await Blacklist.create({ token, user: user._id });
       const badLoginRes = await request.get('/signout').set(
         'Authorization',
-        `Bearer ${token}`
-      ); 
-      expect(badLoginRes.status).toBe(402)
+        `Bearer ${token}`,
+      );
+      expect(badLoginRes.status).toBe(402);
     });
   });
 });
