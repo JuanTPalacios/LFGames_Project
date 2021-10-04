@@ -31,6 +31,7 @@
     "expo-secure-store": "^10.2.0",
     "expo-status-bar": "~1.0.4",
     "express": "^4.17.1",
+    "js-to-ts-converter": "^0.18.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.8",
     "react": "16.13.1",
