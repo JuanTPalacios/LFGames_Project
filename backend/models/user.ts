@@ -5,7 +5,7 @@ interface IUserSchema {
   email: string,
   password: string,
   games: mongoose.Schema.Types.ObjectId[],
-};
+}
 
 const userSchema = new mongoose.Schema<IUserSchema>({
   userName: {
