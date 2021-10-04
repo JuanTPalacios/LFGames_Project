@@ -1,4 +1,4 @@
-import { CLIENT_ID, API_TOKEN, LOCAL_URL } from '@env';
+import { CLIENT_ID, API_TOKEN, LOCAL_URL } from 'react-native-dotenv';
 
 const URL = LOCAL_URL;
 console.log('gamefetch', URL);

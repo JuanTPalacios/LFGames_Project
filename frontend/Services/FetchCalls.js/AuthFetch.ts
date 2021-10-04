@@ -1,4 +1,4 @@
-import { LOCAL_URL } from '@env';
+import { LOCAL_URL } from 'react-native-dotenv';
 
 const URL = LOCAL_URL;
 console.log(URL);
