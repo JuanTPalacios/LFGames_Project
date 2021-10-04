@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 interface IBlacklist {
   token: string,
   user: mongoose.Schema.Types.ObjectId
-};
+}
 
 const blacklistSchema = new mongoose.Schema<IBlacklist>({
   token: {
