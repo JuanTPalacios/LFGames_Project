@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { LOCAL_URL } from 'react-native-dotenv';
 
 const URL = LOCAL_URL;
 console.log('gameslice', URL);
@@ -67,12 +68,12 @@ export const gameSlice = createSlice({
   },
   reducers: {
     clearGameState: (state) => {
-      (state.isFetching = false),
-      (state.isSuccess = false),
-      (state.errorMessage = ''),
-      (userGames = []);
-      isMessage = '';
-      isError = '';
+      state.isFetching = false;
+      state.isSuccess = false;
+      state.errorMessage = '';
+      state.userGames = [];
+      state.isMessage = '';
+      state.isError = false;
     },
   },
   extraReducers: (builder) => {
@@ -84,7 +85,7 @@ export const gameSlice = createSlice({
         state.isFetching = false;
         state.isSuccess = true;
         state.isMessage = '';
-        state.errorMessage = true;
+        state.errorMessage = 'no error';
       })
       .addCase(addGame.rejected, (state, payload) => {
         state.isFetching = false;

@@ -1,12 +1,14 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { LOCAL_URL } from '@env';
+import { LOCAL_URL } from 'react-native-dotenv';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const URL = LOCAL_URL;
 console.log(URL);
 
 export const fetchUserByToken = createAsyncThunk(
   'user/fetchUserByToken',
-  async ({ token }, thunkAPI) => {
+  async (thunkAPI) => {
+    const token = await AsyncStorage.getItem('token')
     try {
       const response = await fetch(`${URL}user`, {
         method: 'GET',

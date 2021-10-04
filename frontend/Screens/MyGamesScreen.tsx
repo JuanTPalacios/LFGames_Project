@@ -11,7 +11,7 @@ import Spacer from '../Components/Spacer';
 import { gameSelector } from '../redux/GameSlice';
 
 // the two args were game and route, just to be safe
-const MyGamesScreen = (_, _) => {
+const MyGamesScreen = (game, route) => {
   const { userGames } = useSelector(gameSelector);
   const { token, isSuccess } = useSelector(authSelector);
   const navigation = useNavigation();

@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import { Input } from 'react-native-elements';
 import { useSelector, useDispatch } from 'react-redux';
+// @ts-ignore
 import { MaterialCommunityIcons, AntDesign } from 'react-native-vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
@@ -29,20 +30,16 @@ const HomeScreen = ({ navigation }) => {
   const { isFetching, isAuthenticated, isSuccess } = useSelector(authSelector);
   const { userGames } = useSelector(gameSelector);
 
-  const getAllGames = async (token) => {
-    dispatch(getMyGameInfo(token));
-  };
-
   const fetchUser = async () => {
     console.log('ping from fetchUser @HomeScreen');
     try {
       const token = dispatch(
-        fetchUserByToken({ token: await AsyncStorage.getItem('token') }),
+        fetchUserByToken(),
       );
       if (token) {
         await AsyncStorage.setItem('token', token.arg.token);
       }
-      await getAllGames(token.arg.token);
+      dispatch(getMyGameInfo()); 
     } catch (err) {
       console.log('errror token app', err.message);
     }

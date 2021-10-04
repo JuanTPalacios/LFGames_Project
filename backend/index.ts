@@ -3,9 +3,19 @@ import authRouter from './routes/authRoutes';
 import gameRouter from './routes/gamesRoutes';
 import userRouter from './routes/userRoutes';
 import cfg from './config';
-import db from './db';
+import mongoose from "mongoose";
 
 const app = express();
+
+(() => {
+mongoose.connect(cfg.MONGOURI);
+
+mongoose.connection.on("connected", () => {
+  console.log("connected to MongoDb");
+});
+mongoose.connection.on("error", () => {
+  console.log("Error connecting to MongoDb");
+})})();
 
 app.use(express.json());
 app.use(authRouter);

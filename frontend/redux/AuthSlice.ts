@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { LOCAL_URL } from '@env';
+import { LOCAL_URL } from 'react-native-dotenv';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { signInOldUser, signUpUser } from '../Services/FetchCalls.js/AuthFetch';
 

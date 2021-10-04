@@ -18,19 +18,19 @@ const AccountScreen = () => {
         rounded
         icon={{ name: 'user', type: 'font-awesome' }}
       />
-      <Spacer />
+      <Spacer children={undefined} />
       <Text style={styles.name}>
         Username:
         {userName}
       </Text>
-      <Spacer />
+      <Spacer children={undefined} />
       <Text style={styles.name}>
         Email :
         {email}
       </Text>
-      <Spacer />
+      <Spacer children={undefined} />
       <View style={styles.btn}>
-        <Spacer />
+        <Spacer children={undefined} />
         <Button
           title="Edit Account Details"
           onPress={() => setIsVisible(true)}
@@ -38,17 +38,17 @@ const AccountScreen = () => {
       </View>
 
       <BottomSheet isVisible={isVisible} containerStyle={styles.botomSheet}>
-        <ListItem onPress={console.log('pressed')}>
+        <ListItem>
           <ListItem.Content>
             <ListItem.Title style={styles.btn}>
-              <Button title="change username" />
+              <Button title="change username" onPress={() => {}} />
             </ListItem.Title>
           </ListItem.Content>
         </ListItem>
         <ListItem>
           <ListItem.Content>
             <ListItem.Title style={styles.btn}>
-              <Button title="change password" />
+              <Button title="change password" onPress={() => {}} />
             </ListItem.Title>
           </ListItem.Content>
         </ListItem>

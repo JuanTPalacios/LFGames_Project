@@ -21,7 +21,7 @@ const SignupScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <View>
         <Image
-          source="../../assets/Logo.jpeg"
+          source={require("../../assets/Logo.jpeg")}
           style={{
             width: 90,
             height: 90,
