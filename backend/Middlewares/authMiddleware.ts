@@ -5,12 +5,11 @@ import Blacklist from '../models/blacklist';
 import cfg from '../config';
 
 export default async (req: Request, res: Response, next: NextFunction) => {
-  const authorization: string | undefined = req.headers.authorization;
+  const { authorization } = req.headers;
   if (!authorization) {
-    return res.status(402).send({ error: "you must be logged in" });
+    return res.status(402).send({ error: 'you must be logged in' });
   }
-  const token: string = authorization.replace("Bearer ","");
-  
+  const token: string = authorization.replace('Bearer ', '');
   try {
     const tokenPayload: string | JwtPayload = jwt.verify(token, cfg.ACCESS_TOKEN_SECRET);
     if (typeof tokenPayload === 'string') throw new Error('Failed to verify token');
@@ -19,8 +18,8 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     if (userBlacklist.length > 0) return res.status(402).send('Invalid token');
     req.body.user = user;
     req.body.token = token;
-    next();
+    return next();
   } catch (e) {
-    res.status(402).send('Must log in first');
+    return res.status(402).send('Must log in first');
   }
 };
