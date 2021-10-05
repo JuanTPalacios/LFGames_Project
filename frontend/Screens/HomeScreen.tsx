@@ -22,7 +22,7 @@ import { getGameInfo } from '../Services/FetchCalls.js/GameApi.js/GameFetch';
 import GameList from '../Components/GameList';
 import { authSelector } from '../redux/AuthSlice';
 import { fetchUserByToken } from '../redux/UserSlice';
-import { useSignUpUserQuery } from '../Services/UserService';
+import { useSignUpUserMutation } from '../Services/UserService';
 
 const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -31,15 +31,10 @@ const HomeScreen = ({ navigation }) => {
   const { isFetching, isAuthenticated, isSuccess } = useSelector(authSelector);
   const { userGames } = useSelector(gameSelector);
 
-  const { data, error, isLoading } = useSignUpUserQuery({
-    userName: 'newreduxtest',
-    userEmail: 'testemail@123.com',
-    userPassword: 'thisisapassword'
-  });
-
-  console.log('data', data);
-  console.log('error', error);
-  console.log('isLoading', isLoading);
+  const [
+    signUpUser,
+    {error, data, status}
+  ] = useSignUpUserMutation();
 
   const fetchUser = async () => {
     console.log('ping from fetchUser @HomeScreen');
@@ -71,11 +66,17 @@ const HomeScreen = ({ navigation }) => {
     fetchUser();
   }, [isAuthenticated, isSuccess]);
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     if (searchValue) {
       const re = new RegExp(searchValue, 'i');
       const filteredGames = games.filter((game) => re.test(game.name));
       setGames(filteredGames);
+      const res = await signUpUser({
+        userName: 'bigtest',
+        userEmail: 'thisisanemail',
+        userPassword: 'fuckerwoiefj'
+      });
+      console.log(res);
       setSearchValue('');
     }
   };
@@ -98,7 +99,7 @@ const HomeScreen = ({ navigation }) => {
               onSelect={() => getInfo(
                 'fields name, summary, genres.name, rating, first_release_date, game_modes.name, storyline, platforms.name, cover.url, cover.image_id; where release_dates.platform = (6, 48, 55, 167, 169, 49); limit 200;',
               )}
-              text="All"
+              text='all'
             />
             <MenuOption
               onSelect={() => getInfo(

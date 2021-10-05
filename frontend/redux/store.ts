@@ -14,6 +14,8 @@ export const store = configureStore({
     game: gameSlice.reducer,
     [signUpUserApi.reducerPath]: signUpUserApi.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(signUpUserApi.middleware),
 });
 
 setupListeners(store.dispatch)

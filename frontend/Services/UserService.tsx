@@ -14,13 +14,19 @@ interface IUser {
   password?: string,
 }
 
+interface ICreate {
+  userName: string,
+  userEmail: string,
+  userPassword: string,
+}
+
 // { user: all user info, token: string }
 
 export const signUpUserApi = createApi({
   reducerPath: 'userApi',
   baseQuery: fetchBaseQuery({ baseUrl: LOCAL_URL}),
   endpoints: (builder) => ({
-    signUpUser: builder.query<IUserRes, string>({
+    signUpUser: builder.mutation<IUserRes, ICreate>({
       query: (body) => ({
         url: `user`,
         method: 'POST',
@@ -30,13 +36,4 @@ export const signUpUserApi = createApi({
   }),
 });
 
-export const { useSignUpUserQuery } = signUpUserApi;
-
-
-//addPost: build.mutation<Post, Partial<Post>>({
-      //query: (body) => ({
-        //url: `posts`,
-        //method: 'POST',
-        //body,
-      //}),
-      //invalidatesTags: [{ type: 'Post', id: 'LIST' }],
+export const { useSignUpUserMutation } = signUpUserApi;
