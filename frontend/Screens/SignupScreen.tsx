@@ -6,6 +6,7 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { authSelector, signUp } from '../redux/AuthSlice';
+import { useSignUpUserMutation } from '../Services/UserService';
 
 const SignupScreen = ({ navigation }) => {
   const [userState, setState] = useState({
@@ -13,9 +14,22 @@ const SignupScreen = ({ navigation }) => {
     userEmail: '',
     userPassword: '',
   });
-  const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-  const dispatch = useDispatch();
+  const [serverRes, setServerRes] = useState('');
+  const [
+    signUpUser,
+    {error, data, status}
+  ] = useSignUpUserMutation();
+
   const { errorMessage } = useSelector(authSelector);
+  
+  const submitForm = async () => {
+    const res = await signUpUser(userState);
+    console.log(res);
+    if (res.data) console.log('hello');
+    // sign up user
+    // check for error or success
+    // do something
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -32,6 +46,7 @@ const SignupScreen = ({ navigation }) => {
         <Text h3 h3Style={styles.headerTitle}>
           Create New Account
         </Text>
+        <Text>{serverRes}</Text>
         <Input
           leftIcon={{ type: 'font-awesome', name: 'user' }}
           label="Username"
@@ -40,7 +55,6 @@ const SignupScreen = ({ navigation }) => {
           onChangeText={(userName) => setState({ ...userState, userName })}
           autoCapitalize="none"
           autoCorrect={false}
-          required
         />
         <Input
           leftIcon={{ type: 'font-awesome', name: 'envelope-square' }}
@@ -50,7 +64,6 @@ const SignupScreen = ({ navigation }) => {
           onChangeText={(userEmail) => setState({ ...userState, userEmail })}
           autoCapitalize="none"
           autoCorrect={false}
-          required
         />
         <Input
           leftIcon={{ type: 'font-awesome', name: 'lock' }}
@@ -61,14 +74,12 @@ const SignupScreen = ({ navigation }) => {
           autoCorrect={false}
           autoCapitalize="none"
           secureTextEntry
-          required
         />
         {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
-        {reg.test(userState.userEmail) !== true ? (
-          <Button disabled title="Sign Up" />
-        ) : (
-          <Button title="Sign Up" onPress={() => dispatch(signUp(userState))} />
-        )}
+        {userState.userName && userState.userEmail && userState.userPassword 
+        ? <Button title="Sign Up" onPress={submitForm} />
+        : <Button title="Sign Up" disabled />
+        }
         <TouchableOpacity onPress={() => navigation.push('signIn')}>
           <Text style={styles.link}>
             {' '}

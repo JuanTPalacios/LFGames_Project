@@ -1,17 +1,21 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { TokenExpiredError } from 'jsonwebtoken';
 // import { Pokemon } from './types'
 import { LOCAL_URL } from 'react-native-dotenv';
 
+interface IData {
+  token?: string
+  user?: IUser
+  error?: { data: { error: string }} 
+} 
 
-interface IUserRes {
-  user: IUser,
-  token: string
+interface IRes {
+  data: IData
 }
 
 interface IUser {
   userName: string,
   email: string,
-  password?: string,
 }
 
 interface ICreate {
@@ -20,18 +24,16 @@ interface ICreate {
   userPassword: string,
 }
 
-// { user: all user info, token: string }
-
 export const signUpUserApi = createApi({
   reducerPath: 'userApi',
   baseQuery: fetchBaseQuery({ baseUrl: LOCAL_URL}),
   endpoints: (builder) => ({
-    signUpUser: builder.mutation<IUserRes, ICreate>({
+    signUpUser: builder.mutation<IRes, ICreate>({
       query: (body) => ({
         url: `user`,
         method: 'POST',
         body
-        }),
+      }),
     }),
   }),
 });

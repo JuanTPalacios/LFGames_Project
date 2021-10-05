@@ -47,7 +47,7 @@ const HomeScreen = ({ navigation }) => {
       }
       dispatch(getMyGameInfo()); 
     } catch (err) {
-      console.log('errror token app', err.message);
+      //console.log('errror token app', err.message);
     }
   };
 
@@ -74,9 +74,9 @@ const HomeScreen = ({ navigation }) => {
       const res = await signUpUser({
         userName: 'bigtest',
         userEmail: 'thisisanemail',
-        userPassword: 'fuckerwoiefj'
+        userPassword: 'fuckerwoiefj',
       });
-      console.log(res);
+      console.log('RESULT', res);
       setSearchValue('');
     }
   };
@@ -154,7 +154,7 @@ const HomeScreen = ({ navigation }) => {
     <>
       <SafeAreaView style={{ flex: 1, backgroundColor: '#555c63' }}>
         <Input
-          placeholder="Search..."
+          placeholder="search"
           leftIcon={icon}
           onChangeText={(text) => setSearchValue(text)}
           onSubmitEditing={() => handleSearch()}

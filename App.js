@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -15,23 +15,14 @@ import {
   DrawerItemList,
 } from "@react-navigation/drawer";
 import { MenuProvider } from "react-native-popup-menu";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import HomeScreen from "./frontend/Screens/HomeScreen";
 import GameDetailScreen from "./frontend/Screens/GameDetailsScreen";
 import SignupScreen from "./frontend/Screens/SignupScreen";
 import SigninScreen from "./frontend/Screens/SigninScreen";
 import MyGamesScreen from "./frontend/Screens/MyGamesScreen";
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-
 import { Provider } from "react-redux";
-import { authSelector, authSlice } from "./frontend/redux/AuthSlice";
-import {
-  fetchUserByToken,
-  userSelector,
-  userSlice,
-} from "./frontend/redux/UserSlice";
-import { signOutUser, clearState } from "./frontend/redux/AuthSlice";
-import { getMyGameInfo } from "./frontend/redux/GameSlice";
+import { authSelector, signOutUser } from "./frontend/redux/AuthSlice";
 import { store } from './frontend/redux/store';
 import { useSelector, useDispatch } from "react-redux";
 import AccountScreen from "./frontend/Screens/AccountScreen";
