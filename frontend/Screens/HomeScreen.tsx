@@ -22,7 +22,7 @@ import { getGameInfo } from '../Services/FetchCalls.js/GameApi.js/GameFetch';
 import GameList from '../Components/GameList';
 import { authSelector } from '../redux/AuthSlice';
 import { fetchUserByToken } from '../redux/UserSlice';
-import {  }
+import { useSignUpUser } from '../Services/UserService';
 
 const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -31,7 +31,15 @@ const HomeScreen = ({ navigation }) => {
   const { isFetching, isAuthenticated, isSuccess } = useSelector(authSelector);
   const { userGames } = useSelector(gameSelector);
 
-  const {  }
+  const { data, error, isLoading } = useSignUpUser({
+    userName: 'newreduxtest',
+    userEmail: 'testemail@123.com',
+    userPassword: 'thisisapassword'
+  });
+
+  console.log('data', data);
+  console.log('error', error);
+  console.log('isLoading', isLoading);
 
   const fetchUser = async () => {
     console.log('ping from fetchUser @HomeScreen');
