@@ -30,7 +30,7 @@ export const signUpUserApi = createApi({
   }),
 });
 
-export const { useSignUpUser } = signUpUserApi;
+export const { useSignUpUserQuery } = signUpUserApi;
 
 
 //addPost: build.mutation<Post, Partial<Post>>({

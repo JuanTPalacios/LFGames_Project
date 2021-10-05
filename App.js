@@ -32,7 +32,7 @@ import {
 } from "./frontend/redux/UserSlice";
 import { signOutUser, clearState } from "./frontend/redux/AuthSlice";
 import { getMyGameInfo } from "./frontend/redux/GameSlice";
-import store from "./frontend/redux/store";
+import { store } from './frontend/redux/store';
 import { useSelector, useDispatch } from "react-redux";
 import AccountScreen from "./frontend/Screens/AccountScreen";
 
