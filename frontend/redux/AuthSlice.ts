@@ -11,12 +11,13 @@ export const signUp = createAsyncThunk('auth/signUp', async (body) => {
   AsyncStorage.setItem('token', result.token);
   return result;
 });
+
 // Sign In User
 export const signInUser = createAsyncThunk('auth/signInUser', async (body) => {
-  const result = await signInOldUser('signin', body);
-  AsyncStorage.setItem('token', result.token);
-  return result;
-});
+    const result = await signInOldUser('signin', body);
+    AsyncStorage.setItem('token', result.token);
+    return result;
+  });
 
 export const signOutUser = createAsyncThunk(
   'auth/signOutUser',
@@ -65,6 +66,16 @@ export const authSlice = createSlice({
       (state.token = '');
     },
     signOut: (state) => { state.isAuthenticated = false; },
+    signIn: (state, body) => {
+          const {payload} = body;
+          state.isSuccess = true;
+          state.isFetching = false;
+          state.email = payload.userEmail;
+          state.userName = payload.userName;
+          state.isAuthenticated = true;
+          // state.token = payload.token;
+          state.errorMessage = '';
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -82,7 +93,6 @@ export const authSlice = createSlice({
       })
       .addCase(signUp.rejected, (state, payload) => {
         state.isFetching = false;
-
         state.errorMessage = payload.payload.error;
       });
     builder
@@ -124,6 +134,6 @@ export const authSlice = createSlice({
   },
 });
 
-export const { clearState, signOut } = authSlice.actions;
+export const { clearState, signOut, signIn } = authSlice.actions;
 
 export const authSelector = (state) => state.auth;

@@ -48,7 +48,13 @@ export const createUser = async (req: Request, res: Response) => {
     });
 
     const token = jwt.sign({ userId: newUser._id }, cfg.ACCESS_TOKEN_SECRET);
-    res.status(200).send({ user: newUser, token });
+    res.status(200).send({ 
+      user: { 
+        userName: userName, 
+        email: userEmail 
+      }, 
+      token }
+    );
   } catch (err) {
     console.log(err);
     return res.status(422).send('Error creating user');

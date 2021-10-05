@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { authSelector, signInUser } from '../redux/AuthSlice';
+import { authSelector, signInUser, signIn } from '../redux/AuthSlice';
 
 const img = require('../../assets/Logo.jpeg');
 
@@ -16,6 +16,9 @@ const SigninScreen = ({ navigation }) => {
     userEmail: '',
     userPassword: '',
   });
+
+  // result = await fetch sing in object
+  // dispatch(signin(result))
 
   const reg = /^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w{2,3})+$/;
   const { errorMessage } = useSelector(authSelector);

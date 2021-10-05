@@ -7,10 +7,15 @@
     "sourceMap": true,
     "outDir": "dist",
     "forceConsistentCasingInFileNames": true,
-    "strict": false, 
+    "strict": false,
     "skipLibCheck": true,
     "moduleResolution": "node"
   },
-  "include": ["backend/**/*"],
-  "exclude": ["node_modules"]
+  "include": [
+    "backend/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+  "extends": "expo/tsconfig.base"
 }
