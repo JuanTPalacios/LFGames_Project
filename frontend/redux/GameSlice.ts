@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { LOCAL_URL } from 'react-native-dotenv';
 
 const URL = LOCAL_URL;
-console.log('gameslice', URL);
 
 export const addGame = createAsyncThunk(
   'game/addGame',

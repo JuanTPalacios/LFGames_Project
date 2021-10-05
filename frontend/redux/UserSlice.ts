@@ -3,7 +3,6 @@ import { LOCAL_URL } from 'react-native-dotenv';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const URL = LOCAL_URL;
-console.log(URL);
 
 export const fetchUserByToken = createAsyncThunk(
   'user/fetchUserByToken',

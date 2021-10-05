@@ -51,6 +51,7 @@ const Platforms = (item) => (
       data={item.platforms}
       listKey={(game, index) => `C${index.toString()}`}
       renderItem={(item) => <Text style={styles.content}>{item.name}</Text>}
+      keyExtractor={ (item, index) => index.toString() }
     />
   </>
 );
@@ -62,6 +63,7 @@ const Genres = (item) => (
       data={item.genres}
       listKey={(game) => game.name}
       renderItem={(item) => <Text style={styles.content}>{item.name}</Text>}
+      keyExtractor={ (item, index) => index.toString() }
     />
   </>
 );
@@ -72,6 +74,7 @@ const Screenshots = (item) => (
       numColumns={3}
       data={item.screenshots}
       listKey={(game) => game.url}
+      keyExtractor={ (item, index) => index.toString() }
       renderItem={(item) => (
         <Image
           style={{ width: 125, height: 125, margin: 5 }}
@@ -98,12 +101,10 @@ const GameDetailScreen = ({ route }) => {
     gameDetailsHandler();
   }, []);
 
-  async function gameDetailsHandler() {
+  const gameDetailsHandler = async () => {
     const res = await getGameDetails(detailsParams);
-    if (res) {
-      setGameDetails(res);
-    }
-  }
+    if (res) setGameDetails(res);
+  };
 
   return (
     <>

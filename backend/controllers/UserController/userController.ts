@@ -11,11 +11,10 @@ import jwt from 'jsonwebtoken';
 export const updateUser = async (req: Request, res: Response) => {
   try {
     const { _id } = req.body.user;
-    const {userName, userEmail } = req.body
-    const user = await User.findById(userEmail)
+    const {userName, email } = req.body
+    const user = await User.findById(email)
     if(!user) return res.status(422).send({error: 'Must be signed in'})
-    const updatedUser = User.findByIdAndUpdate(userEmail, {userName, userEmail})
-    //await updatedUser.save()
+    const updatedUser = User.findByIdAndUpdate(email, {userName, email})
     return res.status(200).send({user});
   } catch (err) {
     console.log(err)
@@ -25,25 +24,25 @@ export const updateUser = async (req: Request, res: Response) => {
 
 export const createUser = async (req: Request, res: Response) => {
   try {
-    const { userEmail, userPassword, userName } = req.body;
-    if (!userEmail || !userPassword || !userName) {
+    const { email, password, userName } = req.body;
+    if (!email || !password || !userName) {
       return res.status(422).send({ error: "Must provide email and password" });
     }
 
     // TODO: fix to check for existing userName? or allow duplicate usernames?
-    const user = await User.findOne({ email: userEmail });
+    const user = await User.findOne({ email });
     if (user) {
       return res.status(422).send({ error: "Email already exists, Try again" });
     }
 
-    if (userPassword.length < 8) {
+    if (password.length < 8) {
       return res.status(422).send({ error: 'Password must be at least eight characters' });
     }
 
-    const hashedPassword = bcrypt.hashSync(userPassword, 10);
+    const hashedPassword = bcrypt.hashSync(password, 10);
     const newUser = await User.create({
       userName,
-      email: userEmail,
+      email,
       password: hashedPassword,
     });
 
@@ -51,7 +50,7 @@ export const createUser = async (req: Request, res: Response) => {
     res.status(200).send({ 
       user: { 
         userName, 
-        email: userEmail 
+        email
       }, 
       token 
     });

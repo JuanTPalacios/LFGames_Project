@@ -6,7 +6,7 @@ import bcrypt from 'bcrypt';
 import cfg from '../../config';
 
 export const signIn = async (req: Request, res: Response) => {
-  const { userEmail: email, userPassword: password, userName } = req.body;
+  const { email, password, userName } = req.body;
   if (!email || !password || !userName) {
     return res.status(422).send({ error: "Must provide email and password" });
   }

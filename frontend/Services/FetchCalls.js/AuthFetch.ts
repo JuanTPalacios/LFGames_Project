@@ -1,7 +1,6 @@
 import { LOCAL_URL } from 'react-native-dotenv';
 
 const URL = LOCAL_URL;
-console.log(URL);
 export const signUpUser = async (api, body) => {
   const response = await fetch(`${URL}user`, {
     method: 'POST',

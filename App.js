@@ -22,7 +22,7 @@ import SigninScreen from "./frontend/Screens/SigninScreen";
 import MyGamesScreen from "./frontend/Screens/MyGamesScreen";
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider } from "react-redux";
-import { authSelector, signOutUser } from "./frontend/redux/AuthSlice";
+import {  authSelector, signOutUser } from "./frontend/redux/AuthSlice";
 import { store } from './frontend/redux/store';
 import { useSelector, useDispatch } from "react-redux";
 import AccountScreen from "./frontend/Screens/AccountScreen";
@@ -30,8 +30,9 @@ import AccountScreen from "./frontend/Screens/AccountScreen";
 const Auth = createNativeStackNavigator();
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
+const isFetching = false;
 
-//AuthStack
+//
 const AuthStack = () => (
   <Auth.Navigator>
     <Auth.Screen
@@ -105,7 +106,7 @@ const CustomDrawer = (props) => {
   );
 };
 function App() {
-  const { isSuccess, isError, errorMessage, token, isFetching, isAuthenticated } = useSelector(authSelector);
+  const isAuthenticated = useSelector(state => state.user.isAuthenticated);
   return (
     <SafeAreaProvider>
     <MenuProvider>

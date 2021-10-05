@@ -3,34 +3,26 @@ import { TokenExpiredError } from 'jsonwebtoken';
 // import { Pokemon } from './types'
 import { LOCAL_URL } from 'react-native-dotenv';
 
-interface IData {
-  token?: string
-  user?: IUser
-  error?: { data: { error: string }} 
-} 
-
-interface IRes {
-  data: IData
+interface ISignInRes {
+  user: {
+    userName: string
+    email: string
+  } 
 }
 
-interface IUser {
+interface ICreateUser {
   userName: string,
   email: string,
-}
-
-interface ICreate {
-  userName: string,
-  userEmail: string,
-  userPassword: string,
+  password: string,
 }
 
 export const signUpUserApi = createApi({
   reducerPath: 'userApi',
   baseQuery: fetchBaseQuery({ baseUrl: LOCAL_URL}),
   endpoints: (builder) => ({
-    signUpUser: builder.mutation<IRes, ICreate>({
+    signUpUser: builder.mutation<ISignInRes, ICreateUser>({
       query: (body) => ({
-        url: `user`,
+        url: 'user',
         method: 'POST',
         body
       }),

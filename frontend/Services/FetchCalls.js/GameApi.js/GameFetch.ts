@@ -1,10 +1,8 @@
 import { CLIENT_ID, API_TOKEN, LOCAL_URL } from 'react-native-dotenv';
 
 const URL = LOCAL_URL;
-console.log('gamefetch', URL);
 
 export const getGameInfo = async (Mbody) => {
-  console.log('ping from getgameinfo');
   try {
     const response = await fetch('https://api.igdb.com/v4/games', {
       method: 'POST',
