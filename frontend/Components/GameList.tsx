@@ -21,7 +21,7 @@ const GameList = ({
   const dispatch = useDispatch();
   const [serverRes, setServerRes] = useState('');
 
-  const addGame = async (game) => {
+  const addToList = async (game) => {
     const res = await addGameToList(game);
     dispatch(addGame(game));
     if (res.error) setServerRes(res.error);
@@ -45,7 +45,7 @@ const GameList = ({
           >
             <GameShow
               game={item}
-              addGameToList={addGame}
+              addGameToList={() => addToList(item)}
               token={token}
             />
           </TouchableOpacity>

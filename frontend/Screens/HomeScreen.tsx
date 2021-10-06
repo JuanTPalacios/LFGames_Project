@@ -16,7 +16,7 @@ import {
   MenuOption,
   MenuTrigger,
 } from 'react-native-popup-menu';
-import { getMyGameInfo, gameSelector } from '../redux/GameSlice';
+import { gameSelector } from '../redux/GameSlice';
 import { getGameInfo } from '../Services/FetchCalls.js/GameApi.js/GameFetch';
 
 import GameList from '../Components/GameList';
@@ -39,7 +39,6 @@ const HomeScreen = ({ navigation }) => {
       if (token) {
         await AsyncStorage.setItem('token', token.arg.token);
       }
-      dispatch(getMyGameInfo()); 
     } catch (err) {
       //console.log('errror token app', err.message);
     }

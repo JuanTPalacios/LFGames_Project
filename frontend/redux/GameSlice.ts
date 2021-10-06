@@ -18,7 +18,7 @@ export const gameSlice = createSlice({
     setGames: (state, body) => {
       const { payload } = body;
       state.userGames = [
-        ...payload
+        ...payload.games
       ];
     },
     addGame: (state, body) => {
