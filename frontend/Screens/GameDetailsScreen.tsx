@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import ParallaxScroll from '../Components/ParallaxScroll';
 import { getGameDetails } from '../Services/FetchCalls.js/GameApi.js/GameFetch';
+import Spacer from '../Components/Spacer';
 
 const renderParallaxHeader = (item) => {
   return <Image
@@ -24,12 +25,9 @@ const renderParallaxHeader = (item) => {
     resizeMode="cover"
   />
 };
-const renderFixedHeader = (value) => (
-  <View style={styles.fixedHeader}>
-    <Text style={styles.fixedHeader}>{value.name}</Text>
-  </View>
-);
-const renderStickyHeader = (value) => {
+
+const renderStickyHeader = (value, item) => {
+  
   const opacity = value.interpolate({
     inputRange: [0, 150, 200],
     outputRange: [0, 0, 1],
@@ -39,6 +37,7 @@ const renderStickyHeader = (value) => {
   return (
     <View style={styles.stickyHeader}>
       <Animated.View style={[styles.stickyHeaderBackground, { opacity }]} />
+      <Text style={styles.fixedHeader}>{item.name}</Text>
     </View>
   );
 };
@@ -61,7 +60,6 @@ const Screenshots = (item) => (
   </>
 );
 
-const headerSize = 50;
 const windowWidth = Dimensions.get('window').width;
 
 const setDetailsParams = (id) => `fields id, name, summary, genres.name, rating,  total_rating, screenshots.url, first_release_date, cover.url, game_modes.name, cover.image_id, genres.name, platforms.name; where id = ${id};`;
@@ -95,13 +93,11 @@ const GameDetailScreen = ({ route }) => {
               parallaxHeaderHeight={500}
               stickyHeaderHeight={500}
               parallaxHeader={() => renderParallaxHeader(item)}
-              fixedHeader={() => renderFixedHeader(item)}
-              stickyHeader={(item) => renderStickyHeader(item)}
+              stickyHeader={(value: number) => renderStickyHeader(value, item)}
             >
 
               <View
                 style={{
-                  height: 600,
                   flexDirection: 'column',
                   justifyContent: 'flex-start',
                   width: windowWidth,
@@ -112,10 +108,12 @@ const GameDetailScreen = ({ route }) => {
                   onToggle={() => setExpanded(!expanded)}
                 >
                   <CollapseHeader>
+                  <Spacer />
                     <Text style={styles.headerText}>Summary</Text>
                   </CollapseHeader>
                   <CollapseBody>
                     <Text style={styles.summary}>{item.summary}</Text>
+                    <Spacer />
                   </CollapseBody>
                 </Collapse>
 
@@ -132,7 +130,7 @@ const GameDetailScreen = ({ route }) => {
                     <Text style={styles.content}>
                       {`Released ${new Date(
                         item.first_release_date * 1000,
-                      ).toDateString()}`}
+                        ).toDateString()}`}
                       {' '}
                     </Text>
                     <Text style={styles.content}>
@@ -142,6 +140,7 @@ const GameDetailScreen = ({ route }) => {
                       {' '}
                       / 100
                     </Text>
+                    <Spacer />
                   </CollapseBody>
                 </Collapse>
 
@@ -156,6 +155,7 @@ const GameDetailScreen = ({ route }) => {
                     {item.platforms && item.platforms.map(platform => (
                       <Text style={styles.content} key={platform.name}>{platform.name}</Text>
                     ))}
+                  <Spacer />
                   </CollapseBody>
                 </Collapse>
 
@@ -188,9 +188,8 @@ const styles = StyleSheet.create({
   imageStyle: {
     height: '100%',
     width: windowWidth,
-    borderWidth: 1,
-    borderColor: 'red',
     marginTop: 0,
+    zIndex: 0,
   },
   headerText: {
     alignSelf: 'center',
@@ -219,17 +218,17 @@ const styles = StyleSheet.create({
     width: windowWidth,
     padding: 10,
     fontWeight: 'bold',
-    color: '#1a2d7d',
+    color: 'black',
   },
   stickyHeader: {
-    height: headerSize,
+    height: 40,
     width: windowWidth,
-    backgroundColor: 'rgba(0,0,0,0.4)',
+    backgroundColor: 'rgba(0,0,0,0.1)',
     marginTop: 0,
   },
   stickyHeaderBackground: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'purple',
+    backgroundColor: 'white',
   },
 });
 
