@@ -29,12 +29,10 @@ export const createUser = async (req: Request, res: Response) => {
       return res.status(422).send({ error: "Must provide email and password" });
     }
 
-    // TODO: fix to check for existing userName? or allow duplicate usernames?
     const user = await User.findOne({ email });
     if (user) {
       return res.status(422).send({ error: "Email already exists, Try again" });
     }
-
     if (password.length < 8) {
       return res.status(422).send({ error: 'Password must be at least eight characters' });
     }

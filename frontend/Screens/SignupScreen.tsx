@@ -3,11 +3,11 @@ import { Text, Button, Input } from 'react-native-elements';
 import {
   View, SafeAreaView, StyleSheet, Image,
 } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { authSelector } from '../redux/NewUserSlice';
-import { useSignUpUserMutation } from '../Services/UserService';
 import { signIn } from '../redux/NewUserSlice';
+import UserService from '../Services/UserService';
 
 const SignupScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -17,19 +17,15 @@ const SignupScreen = ({ navigation }) => {
     password: '',
   });
   const [serverRes, setServerRes] = useState('');
-  const [
-    signUpUser,
-  ] = useSignUpUserMutation();
   
   const submitForm = async () => {
-    const res = await signUpUser(userState);
-    if ('data' in res) {
-      dispatch(signIn(res.data.user));
+    const res = await UserService.signUp(userState);
+    if (res.error) {
+      setServerRes(res.error);
+      return;
     }
-    if ('error' in res) {
-      console.log(res);
-      setServerRes('Error creating account');
-    }
+    await AsyncStorage.setItem('token', res.token);
+    dispatch(signIn(res.user));
   };
 
   return (

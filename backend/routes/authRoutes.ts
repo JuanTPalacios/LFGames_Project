@@ -7,6 +7,4 @@ const router: Router = express.Router();
 router.post('/signin', signIn);
 router.get('/signout', authMiddleware, signOutUser);
 
-// move getUser to userRoutes
-
 export default router;

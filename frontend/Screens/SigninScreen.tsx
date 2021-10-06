@@ -1,28 +1,34 @@
 import React, { useState } from 'react';
-// import Icon from 'react-native-vector-icons/FontAwesome';
 import { Text, Button, Input } from 'react-native-elements';
 import {
   View, SafeAreaView, StyleSheet, Image,
 } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { authSelector, signInUser, signIn } from '../redux/AuthSlice';
-
+import UserService from '../Services/UserService'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { signIn } from '../redux/NewUserSlice'
 const img = require('../../assets/Logo.jpeg');
 
 const SigninScreen = ({ navigation }) => {
   const [userState, setUserState] = useState({
     userName: '',
-    userEmail: '',
-    userPassword: '',
+    email: '',
+    password: '',
   });
+  const [serverRes, setServerRes] = useState('')
 
-  // result = await fetch sing in object
-  // dispatch(signin(result))
-
-  const reg = /^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w{2,3})+$/;
-  const { errorMessage } = useSelector(authSelector);
   const dispatch = useDispatch();
+  const signInUser = async () => {
+    const res = await UserService.signIn(userState);
+    if (res.error) {
+      setServerRes(res.error);
+      return;
+    }
+    console.log(res.games);
+    await AsyncStorage.setItem('token', res.token);
+    dispatch(signIn(res.user));
+  } 
 
   return (
     <SafeAreaView style={styles.container}>
@@ -47,42 +53,35 @@ const SigninScreen = ({ navigation }) => {
           onChangeText={(userName) => setUserState({ ...userState, userName })}
           autoCapitalize="none"
           autoCorrect={false}
-          required
         />
         <Input
           leftIcon={{ type: 'font-awesome', name: 'envelope-square' }}
           label="Email Address"
           placeholder="email@example.com"
-          value={userState.userEmail}
-          onChangeText={(userEmail) => setUserState({
+          value={userState.email}
+          onChangeText={(email) => setUserState({
             ...userState,
-            userEmail,
+            email,
           })}
           autoCapitalize="none"
           autoCorrect={false}
-          required
         />
         <Input
           leftIcon={{ type: 'font-awesome', name: 'lock' }}
           label="Password"
           placeholder="Password"
-          value={userState.userPassword}
-          onChangeText={(userPassword) => setUserState({ ...userState, userPassword })}
+          value={userState.password}
+          onChangeText={(password) => setUserState({ ...userState, password })}
           autoCorrect={false}
           autoCapitalize="none"
           secureTextEntry
         />
-        {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
-        {reg.test(userState.userEmail) !== true ? (
-          <Button disabled title="Sign In" />
-        ) : (
-          <Button
-            title="Sign In"
-            onPress={() => dispatch(signInUser(userState))}
-          />
-        )}
+        {<Text style={styles.error}>{serverRes}</Text>}
+        <Button
+          title="Sign In"
+          onPress={signInUser}
+        />
         <TouchableOpacity
-          title="Sign Up"
           onPress={() => navigation.navigate('signUp')}
         >
           <Text style={styles.link}>Dont have an account? Go to Register!</Text>

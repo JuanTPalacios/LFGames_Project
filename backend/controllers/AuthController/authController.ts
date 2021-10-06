@@ -12,6 +12,7 @@ export const signIn = async (req: Request, res: Response) => {
   }
   try {
     const user = await User.findOne({ email });
+    const games = await user.populate('games');
     if (!user) {
       return res.status(404).send({ error: "Email not found" });
     }
@@ -24,7 +25,7 @@ export const signIn = async (req: Request, res: Response) => {
         const token = jwt.sign({ userId: user._id }, cfg.ACCESS_TOKEN_SECRET, {
           expiresIn: "7d",
         });
-        return res.status(200).send({ token, user });
+        return res.status(200).send({ token, user, games });
       }
     });
   } catch (err) {

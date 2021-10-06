@@ -1,6 +1,4 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { TokenExpiredError } from 'jsonwebtoken';
-// import { Pokemon } from './types'
+// @ts-ignore
 import { LOCAL_URL } from 'react-native-dotenv';
 
 interface ISignInRes {
@@ -10,24 +8,47 @@ interface ISignInRes {
   } 
 }
 
-interface ICreateUser {
+interface IUserInfo {
   userName: string,
   email: string,
   password: string,
 }
 
-export const signUpUserApi = createApi({
-  reducerPath: 'userApi',
-  baseQuery: fetchBaseQuery({ baseUrl: LOCAL_URL}),
-  endpoints: (builder) => ({
-    signUpUser: builder.mutation<ISignInRes, ICreateUser>({
-      query: (body) => ({
-        url: 'user',
-        method: 'POST',
-        body
-      }),
-    }),
-  }),
-});
+interface IUserService {
+  signUp: Function
+  signIn: Function
+  signOut: Function
+}
 
-export const { useSignUpUserMutation } = signUpUserApi;
+const UserService: IUserService = {
+  signUp: () => {},
+  signIn: () => {},
+  signOut: () => {},
+};
+
+
+UserService.signUp = async (body: IUserInfo) => {
+  const response = await fetch(`${LOCAL_URL}user`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+  return response.json();
+};
+
+UserService.signIn = async (body: IUserInfo) => {
+  const res = await fetch(`${LOCAL_URL}signin`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+  return res.json();
+};
+
+export default UserService;
