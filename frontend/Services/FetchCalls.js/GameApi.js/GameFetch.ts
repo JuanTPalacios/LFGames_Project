@@ -31,7 +31,6 @@ export const getGameInfo = async (Mbody) => {
 
 export const getGameDetails = async (gameDetails) => {
   try {
-    console.log('ping from getgamedetails');
     const response = await fetch('https://api.igdb.com/v4/games', {
       method: 'POST',
       headers: {

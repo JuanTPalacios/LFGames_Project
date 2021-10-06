@@ -15,16 +15,15 @@ import {
   Text,
 } from 'react-native';
 import ParallaxScroll from '../Components/ParallaxScroll';
-import Spacer from '../Components/Spacer';
 import { getGameDetails } from '../Services/FetchCalls.js/GameApi.js/GameFetch';
 
-const renderParallaxHeader = (item) => (
-  <Image
+const renderParallaxHeader = (item) => {
+  return <Image
     source={{ uri: item.cover.url }}
     style={styles.imageStyle}
     resizeMode="cover"
   />
-);
+};
 const renderFixedHeader = (value) => (
   <View style={styles.fixedHeader}>
     <Text style={styles.fixedHeader}>{value.name}</Text>
@@ -44,29 +43,6 @@ const renderStickyHeader = (value) => {
   );
 };
 
-const Platforms = (item) => (
-  <>
-    <FlatList
-      // horizontal
-      data={item.platforms}
-      listKey={(game, index) => `C${index.toString()}`}
-      renderItem={(item) => <Text style={styles.content}>{item.name}</Text>}
-      keyExtractor={ (item, index) => index.toString() }
-    />
-  </>
-);
-
-const Genres = (item) => (
-  <>
-    <FlatList
-      // horizontal
-      data={item.genres}
-      listKey={(game) => game.name}
-      renderItem={(item) => <Text style={styles.content}>{item.name}</Text>}
-      keyExtractor={ (item, index) => index.toString() }
-    />
-  </>
-);
 const Screenshots = (item) => (
   <>
     <FlatList
@@ -122,7 +98,6 @@ const GameDetailScreen = ({ route }) => {
               fixedHeader={() => renderFixedHeader(item)}
               stickyHeader={(item) => renderStickyHeader(item)}
             >
-              <Spacer />
 
               <View
                 style={{
@@ -132,7 +107,6 @@ const GameDetailScreen = ({ route }) => {
                   width: windowWidth,
                 }}
               >
-                <Spacer />
                 <Collapse
                   isExpanded
                   onToggle={() => setExpanded(!expanded)}
@@ -144,7 +118,6 @@ const GameDetailScreen = ({ route }) => {
                     <Text style={styles.summary}>{item.summary}</Text>
                   </CollapseBody>
                 </Collapse>
-                <Spacer />
 
                 <Collapse
                   isExpanded
@@ -159,7 +132,7 @@ const GameDetailScreen = ({ route }) => {
                     <Text style={styles.content}>
                       {`Released ${new Date(
                         item.first_release_date * 1000,
-                      ).toDateString('en-US')}`}
+                      ).toDateString()}`}
                       {' '}
                     </Text>
                     <Text style={styles.content}>
@@ -171,7 +144,6 @@ const GameDetailScreen = ({ route }) => {
                     </Text>
                   </CollapseBody>
                 </Collapse>
-                <Spacer />
 
                 <Collapse
                   isExpanded
@@ -181,13 +153,11 @@ const GameDetailScreen = ({ route }) => {
                     <Text style={styles.headerText}>Platforms</Text>
                   </CollapseHeader>
                   <CollapseBody>
-                    <Text style={styles.content}>
-                      {Platforms(item)}
-                      {' '}
-                    </Text>
+                    {item.platforms && item.platforms.map(platform => (
+                      <Text style={styles.content} key={platform.name}>{platform.name}</Text>
+                    ))}
                   </CollapseBody>
                 </Collapse>
-                <Spacer />
 
                 <Collapse
                   isExpanded
@@ -197,13 +167,11 @@ const GameDetailScreen = ({ route }) => {
                     <Text style={styles.headerText}>Genres</Text>
                   </CollapseHeader>
                   <CollapseBody>
-                    <Text style={styles.content}>
-                      {Genres(item)}
-                      {' '}
-                    </Text>
+                    {item.genres && item.genres.map(genre => (
+                      <Text style={styles.content} key={genre.name}>{genre.name}</Text>
+                    ))}
                   </CollapseBody>
                 </Collapse>
-                <Spacer />
                 <View style={{ flexDirection: 'column', flexWrap: 'wrap' }}>
                   {Screenshots(item)}
                 </View>
@@ -260,7 +228,7 @@ const styles = StyleSheet.create({
     marginTop: 0,
   },
   stickyHeaderBackground: {
-    ...StyleSheet.absoluteFill,
+    ...StyleSheet.absoluteFillObject,
     backgroundColor: 'purple',
   },
 });
