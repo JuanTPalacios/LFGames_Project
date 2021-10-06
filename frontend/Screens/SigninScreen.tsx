@@ -8,6 +8,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import UserService from '../Services/UserService'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { signIn } from '../redux/NewUserSlice'
+import { setGames } from '../redux/GameSlice'
 const img = require('../../assets/Logo.jpeg');
 
 const SigninScreen = ({ navigation }) => {
@@ -25,9 +26,9 @@ const SigninScreen = ({ navigation }) => {
       setServerRes(res.error);
       return;
     }
-    console.log(res.games);
     await AsyncStorage.setItem('token', res.token);
     dispatch(signIn(res.user));
+    dispatch(setGames(res.games));
   } 
 
   return (
