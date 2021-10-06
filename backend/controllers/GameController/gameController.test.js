@@ -13,7 +13,11 @@ const validGame = {
   game: {
     name: 'PONG',
     gameId: 1,
-    cover: 'pong-cover.png',
+    cover: {
+      id: 90909,
+      image_id: 'bigpoohead',
+      url: 'pong-cover.png',
+    },
     first_release_date: 1972,
     image_id: 'pong-img.png',
     total_rating: 10,

@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { Response, Request } from 'express';
 import User from '../../models/user';
+import Games from '../../models/games';
 import Blacklist from '../../models/blacklist';
 import bcrypt from 'bcrypt';
 import cfg from '../../config';
@@ -29,6 +30,7 @@ export const signIn = async (req: Request, res: Response) => {
       }
     });
   } catch (err) {
+    console.log(err);
     return res.status(500).send('Internal server error');
   }
 };

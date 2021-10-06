@@ -1,31 +1,12 @@
 // @ts-ignore
 import { LOCAL_URL } from 'react-native-dotenv';
-
-interface ISignInRes {
-  user: {
-    userName: string
-    email: string
-  } 
-}
-
-interface IUserInfo {
-  userName: string,
-  email: string,
-  password: string,
-}
-
-interface IUserService {
-  signUp: Function
-  signIn: Function
-  signOut: Function
-}
+import { IUserInfo, IUserService } from '../types/types'
 
 const UserService: IUserService = {
   signUp: () => {},
   signIn: () => {},
   signOut: () => {},
 };
-
 
 UserService.signUp = async (body: IUserInfo) => {
   const response = await fetch(`${LOCAL_URL}user`, {

@@ -35,13 +35,13 @@ const isFetching = false;
 const AuthStack = () => (
   <Auth.Navigator>
     <Auth.Screen
-      name="signUp"
-      component={SignupScreen}
+      name="signIn"
+      component={SigninScreen}
       options={{ headerShown: false }}
     />
     <Auth.Screen
-      name="signIn"
-      component={SigninScreen}
+      name="signUp"
+      component={SignupScreen}
       options={{ headerShown: false }}
     />
   </Auth.Navigator>

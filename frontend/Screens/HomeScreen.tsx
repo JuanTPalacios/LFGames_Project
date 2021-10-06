@@ -13,18 +13,16 @@ import {
   MenuOption,
   MenuTrigger,
 } from 'react-native-popup-menu';
-import { getGameInfo } from '../Services/FetchCalls.js/GameApi.js/GameFetch';
+import GameService from '../Services/GameService';
 
 import GameList from '../Components/GameList';
-import { fetchUserByToken } from '../redux/UserSlice';
 
 const HomeScreen = ({ navigation }) => {
-  const dispatch = useDispatch();
   const [games, setGames] = useState([]);
   const [searchValue, setSearchValue] = useState('');
 
   const getInfo = async (Mbody) => {
-    const res = await getGameInfo(Mbody);
+    const res = await GameService.getGameDetails(Mbody);
     setGames(res);
   };
 

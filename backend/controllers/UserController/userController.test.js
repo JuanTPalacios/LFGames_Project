@@ -7,9 +7,9 @@ import User from '../../models/user.ts';
 import cfg from '../../config.ts';
 
 const validUser = {
-  userEmail: 'idiot@idiot.com',
+  email: 'idiot@idiot.com',
   userName: 'billyBob',
-  userPassword: 'bob1232394898',
+  password: 'bob1232394898',
 };
 
 describe('Integration tests', () => {
@@ -34,19 +34,19 @@ describe('Integration tests', () => {
   describe('Create user', () => {
     it('should save a user to the database', async () => {
       await request.post('/user').send(validUser);
-      const user = await User.findOne({ email: validUser.userEmail });
-      expect(user.email).toBe(validUser.userEmail);
+      const user = await User.findOne({ email: validUser.email });
+      expect(user.email).toBe(validUser.email);
     });
 
     it('should not allow duplicate email addresses', async () => {
       await request.post('/user').send(validUser);
       const res = await request.post('/user').send({
         userName: 'fuck',
-        userEmail: 'idiot@idiot.com',
-        userPassword: 'fuckjavascript123',
+        email: 'idiot@idiot.com',
+        password: 'fuckjavascript123',
       });
       expect(res.body.error).toBe('Email already exists, Try again');
-      const users = await User.find({ email: validUser.userEmail });
+      const users = await User.find({ email: validUser.email });
       expect(users.length).toBe(1);
     });
 
@@ -54,8 +54,8 @@ describe('Integration tests', () => {
       const res = await request.post('/user').send({
         fuck: 'the police',
         poo: 'stinky',
-        userEmail: 'stinky@poo.com',
-        userPassword: 'helloWorld',
+        email: 'stinky@poo.com',
+        password: 'helloWorld',
       });
       expect(res.body.error).toBe('Must provide email and password');
 
@@ -63,7 +63,7 @@ describe('Integration tests', () => {
       expect(res2.body.error).toBe('Must provide email and password');
 
       const res3 = await request.post('/user').send({
-        userPassword: 'woeifjqpwoeifjwef',
+        password: 'woeifjqpwoeifjwef',
       });
       expect(res3.body.error).toBe('Must provide email and password');
 
@@ -74,8 +74,8 @@ describe('Integration tests', () => {
     it('should only accept passwords of eight or more characters', async () => {
       const res = await request.post('/user').send({
         userName: 'bigloser',
-        userEmail: 'email@email.com',
-        userPassword: 'badpass',
+        email: 'email@email.com',
+        password: 'badpass',
       });
       const newUser = await User.find({ email: 'email@email.com' });
       expect(res.status).toBe(422);
@@ -84,15 +84,15 @@ describe('Integration tests', () => {
 
     it('should hash user passwords', async () => {
       await request.post('/user').send(validUser);
-      const user = await User.find({ email: validUser.userEmail });
-      expect(user.userPassword).not.toBe(validUser.userPassword);
+      const user = await User.find({ email: validUser.email });
+      expect(user.password).not.toBe(validUser.password);
     });
   });
 
   describe('Get user', () => {
     it('should retrieve user via accessToken', async () => {
       await request.post('/user').send(validUser);
-      const user = await User.findOne({ email: validUser.userEmail });
+      const user = await User.findOne({ email: validUser.email });
       const token = jwt.sign({ userId: user._id }, cfg.ACCESS_TOKEN_SECRET, {
         expiresIn: '7d',
       });
@@ -106,7 +106,7 @@ describe('Integration tests', () => {
 
     it('should reject expired tokens', async () => {
       await request.post('/user').send(validUser);
-      const user = await User.findOne({ email: validUser.userEmail });
+      const user = await User.findOne({ email: validUser.email });
       const token = jwt.sign({ userId: user._id }, cfg.ACCESS_TOKEN_SECRET, {
         expiresIn: '50ms',
       });

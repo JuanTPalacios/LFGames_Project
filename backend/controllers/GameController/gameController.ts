@@ -2,17 +2,11 @@ import { Request, Response } from 'express';
 import Games from '../../models/games';
 import User from '../../models/user';
 
-// style
-// fix destructuring? no need for it?
-// refactor and split addGameToList
-// rename getAllGames
-
-
 export const addGameToList = async (req: Request, res: Response) => {
   try {
     const { _id } = req.body.user;
     let owned = false;
-    const {name, id: gameId, cover, total_rating, genres, platforms, completed, first_release_date } = req.body;
+    const {name, id: gameId, cover, total_rating, genres, platforms, completed, first_release_date } = req.body.game;
     const url = cover.url;
     const image_id = cover.image_id;
 
@@ -35,7 +29,6 @@ export const addGameToList = async (req: Request, res: Response) => {
     return res.status(200).send({ user, message: 'Game added'});
 
   } catch (err) {
-    console.log('error found:', err);
     res.send({ error: 'Error found @ gameController' });
   }
 };

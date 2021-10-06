@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+// @ts-ignore
 import { AntDesign } from 'react-native-vector-icons';
 import { Text, Image, Button } from 'react-native-elements';
 
@@ -32,7 +33,7 @@ const GameShow = ({
       <Text style={styles.text}>
         {' '}
         Released:
-        {new Date(game.first_release_date * 1000).toDateString('en-US')}
+        {new Date(game.first_release_date * 1000).toDateString()}
       </Text>
     </View>
     <View

@@ -7,7 +7,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import GameShow from './GameShow';
-import addGameToList from '../Services/GameService';
+import GameService from '../Services/GameService';
 import { addGame } from '../redux/GameSlice'
 import { useDispatch } from 'react-redux';
 
@@ -20,7 +20,7 @@ const GameList = ({
   const [serverRes, setServerRes] = useState('');
 
   const addToList = async (game) => {
-    const res = await addGameToList(game);
+    const res = await GameService.addGameToList(game);
     dispatch(addGame(game));
     if (res.error) setServerRes(res.error);
     else setServerRes('Game added to list!');

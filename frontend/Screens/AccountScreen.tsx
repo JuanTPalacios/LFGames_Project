@@ -18,24 +18,24 @@ const AccountScreen = () => {
         rounded
         icon={{ name: 'user', type: 'font-awesome' }}
       />
-      <Spacer children={undefined} />
+      <Spacer />
       <Text style={styles.name}>
         Username: {userName}
       </Text>
-      <Spacer children={undefined} />
+      <Spacer />
       <Text style={styles.name}>
         Email: {email}
       </Text>
-      <Spacer children={undefined} />
+      <Spacer />
       <View style={styles.btn}>
-        <Spacer children={undefined} />
+        <Spacer />
         <Button
           title="Edit Account Details"
           onPress={() => setIsVisible(true)}
         />
       </View>
 
-      <BottomSheet isVisible={isVisible} containerStyle={styles.botomSheet}>
+      <BottomSheet isVisible={isVisible} containerStyle={styles.bottomSheet}>
         <ListItem>
           <ListItem.Content>
             <ListItem.Title style={styles.btn}>
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginTop: 20,
   },
-  botomSheet: {
+  bottomSheet: {
     backgroundColor: 'rgba(85, 92, 99, 0.2)',
     height: 100,
   },

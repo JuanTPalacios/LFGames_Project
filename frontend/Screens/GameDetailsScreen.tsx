@@ -15,7 +15,7 @@ import {
   Text,
 } from 'react-native';
 import ParallaxScroll from '../Components/ParallaxScroll';
-import { getGameDetails } from '../Services/FetchCalls.js/GameApi.js/GameFetch';
+import GameService from '../Services/GameService';
 import Spacer from '../Components/Spacer';
 
 const renderParallaxHeader = (item) => {
@@ -27,7 +27,7 @@ const renderParallaxHeader = (item) => {
 };
 
 const renderStickyHeader = (value, item) => {
-  
+  console.log(item);
   const opacity = value.interpolate({
     inputRange: [0, 150, 200],
     outputRange: [0, 0, 1],
@@ -76,7 +76,7 @@ const GameDetailScreen = ({ route }) => {
   }, []);
 
   const gameDetailsHandler = async () => {
-    const res = await getGameDetails(detailsParams);
+    const res = await GameService.getGameDetails(detailsParams);
     if (res) setGameDetails(res);
   };
 

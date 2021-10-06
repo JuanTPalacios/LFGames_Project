@@ -1,8 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-
-interface IGameState {
-  userGames: any[]
-}
+import { IGameState } from '../types/types';
 
 const initialState: IGameState = {
   userGames: []
