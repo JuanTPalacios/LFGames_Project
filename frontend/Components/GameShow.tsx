@@ -4,7 +4,7 @@ import { AntDesign } from 'react-native-vector-icons';
 import { Text, Image, Button } from 'react-native-elements';
 
 const GameShow = ({
-  game, addGameToList, token,
+  game, addGameToList,
 }) => (
   <View style={styles.container}>
     <Image
@@ -45,7 +45,7 @@ const GameShow = ({
       <Button
         buttonStyle={styles.move}
         icon={<AntDesign name="plus" size={22} style={styles.btn_style} />}
-        onPress={() => addGameToList({ ...game, token })}
+        onPress={() => addGameToList( game )}
       />
     </View>
   </View>

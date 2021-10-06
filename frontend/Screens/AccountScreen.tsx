@@ -5,10 +5,10 @@ import {
 import { Avatar, BottomSheet, ListItem } from 'react-native-elements';
 import { useSelector } from 'react-redux';
 import Spacer from '../Components/Spacer';
-import { userSelector } from '../redux/UserSlice';
+import { userSelector } from '../redux/NewUserSlice';
 
 const AccountScreen = () => {
-  const { userName, email } = useSelector(userSelector);
+  const { email, userName } = useSelector(userSelector);
   const [isVisible, setIsVisible] = useState(false);
   return (
     <View style={styles.container}>
@@ -20,13 +20,11 @@ const AccountScreen = () => {
       />
       <Spacer children={undefined} />
       <Text style={styles.name}>
-        Username:
-        {userName}
+        Username: {userName}
       </Text>
       <Spacer children={undefined} />
       <Text style={styles.name}>
-        Email :
-        {email}
+        Email: {email}
       </Text>
       <Spacer children={undefined} />
       <View style={styles.btn}>

@@ -20,9 +20,9 @@ export const userSlice = createSlice({
   name: 'user',
   initialState: {
     user: {
-    userName: '',
-    email: '',
-  },
+      userName: '',
+      email: '',
+    },
   isAuthenticated: false
   },
   reducers: {
@@ -45,5 +45,6 @@ export const userSlice = createSlice({
 });
 
 export const { signIn, signOut, clearState } = userSlice.actions;
-export const authSelector = (state: IState) => state.user;
+export const authSelector = (state) => state.authInfo.isAuthenticated;
+export const userSelector = (state) => state.authInfo.user;
 export default userSlice.reducer;

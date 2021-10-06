@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Image,
 } from 'react-native';
@@ -6,22 +6,12 @@ import { useSelector } from 'react-redux';
 import { FlatList } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { AntDesign, Feather } from 'react-native-vector-icons';
-import { authSelector } from '../redux/AuthSlice';
-import Spacer from '../Components/Spacer';
 import { gameSelector } from '../redux/GameSlice';
 
-// the two args were game and route, just to be safe
 const MyGamesScreen = () => {
   const { userGames } = useSelector(gameSelector);
-  const { token, isSuccess } = useSelector(authSelector);
   const navigation = useNavigation();
-  const [myGames, setMyGames] = useState([]);
 
-  useEffect(() => {
-    setMyGames(userGames);
-  }, [isSuccess]);
-
-  // split up the ternary return conditions for clarity
   if (userGames.length < 1) {
     return (
       <SafeAreaView style={styles.container1}>
@@ -33,7 +23,6 @@ const MyGamesScreen = () => {
             }}
           />
           <Text style={styles.noGameTitle}> No Games Yet</Text>
-          <Spacer />
           <Text style={styles.back}> See all games on Home Screen </Text>
 
           <TouchableOpacity
@@ -55,7 +44,7 @@ const MyGamesScreen = () => {
         keyExtractor={(user, index) => index.toString()}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={() => navigation.navigate('Details', { id: item.gameId })}
+            onPress={() => navigation.navigate('Details', { id: item.id })}
           >
             <View style={styles.container}>
               <Image
@@ -83,9 +72,7 @@ const MyGamesScreen = () => {
                 </Text>
                 <Text style={styles.text}>
                   Released:
-                  {new Date(item.first_release_date * 1000).toDateString(
-                    'en-US',
-                  )}
+                  {new Date(item.first_release_date * 1000).toDateString()}
                 </Text>
                 <View
                   style={{

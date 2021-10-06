@@ -13,9 +13,7 @@ import { useDispatch } from 'react-redux';
 
 const GameList = ({
   games,
-  title,
   navigation,
-  token,
 }) => {
 
   const dispatch = useDispatch();
@@ -35,7 +33,6 @@ const GameList = ({
       }}
     >
       <Text style={styles.error}>{serverRes}</Text>
-      <Text style={styles.title}>{title}</Text>
       <FlatList
         data={games}
         keyExtractor={(game, index) => `A${index.toString()}`}
@@ -46,7 +43,6 @@ const GameList = ({
             <GameShow
               game={item}
               addGameToList={() => addToList(item)}
-              token={token}
             />
           </TouchableOpacity>
         )}

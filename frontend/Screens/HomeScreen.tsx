@@ -1,48 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import {
-  View,
   StyleSheet,
-  ActivityIndicator,
   SafeAreaView,
 } from 'react-native';
 import { Input } from 'react-native-elements';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 // @ts-ignore
 import { MaterialCommunityIcons, AntDesign } from 'react-native-vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   Menu,
   MenuOptions,
   MenuOption,
   MenuTrigger,
 } from 'react-native-popup-menu';
-import { gameSelector } from '../redux/GameSlice';
 import { getGameInfo } from '../Services/FetchCalls.js/GameApi.js/GameFetch';
 
 import GameList from '../Components/GameList';
-import { authSelector } from '../redux/AuthSlice';
 import { fetchUserByToken } from '../redux/UserSlice';
 
 const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const [games, setGames] = useState([]);
   const [searchValue, setSearchValue] = useState('');
-  const { isFetching, isAuthenticated, isSuccess } = useSelector(authSelector);
-  const { userGames } = useSelector(gameSelector);
-
-  const fetchUser = async () => {
-    console.log('ping from fetchUser @HomeScreen');
-    try {
-      const token = dispatch(
-        fetchUserByToken(),
-      );
-      if (token) {
-        await AsyncStorage.setItem('token', token.arg.token);
-      }
-    } catch (err) {
-      //console.log('errror token app', err.message);
-    }
-  };
 
   const getInfo = async (Mbody) => {
     const res = await getGameInfo(Mbody);
@@ -54,10 +33,6 @@ const HomeScreen = ({ navigation }) => {
       'fields name, summary, genres.name, rating, first_release_date, game_modes.name, storyline, platforms.name, cover.url, cover.image_id; where release_dates.platform = (6, 48, 55, 167, 169, 49); limit 200;',
     );
   }, []);
-
-  useEffect(() => {
-    fetchUser();
-  }, [isAuthenticated, isSuccess]);
 
   const handleSearch = async () => {
     if (searchValue) {
@@ -130,13 +105,6 @@ const HomeScreen = ({ navigation }) => {
     });
   }, [navigation]);
 
-  if (isFetching) {
-    return (
-      <View style={[styles.container, styles.horizontal]}>
-        <ActivityIndicator size="large" color="#00ff00" />
-      </View>
-    );
-  }
   return (
     <>
       <SafeAreaView style={{ flex: 1, backgroundColor: '#555c63' }}>
@@ -148,7 +116,7 @@ const HomeScreen = ({ navigation }) => {
           value={searchValue}
         />
 
-        <GameList navigation={navigation} games={games} userGames={userGames} />
+        <GameList navigation={navigation} games={games} />
       </SafeAreaView>
     </>
   );
