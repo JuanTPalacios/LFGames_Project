@@ -65,12 +65,6 @@ const HomeScreen = ({ navigation }) => {
       const re = new RegExp(searchValue, 'i');
       const filteredGames = games.filter((game) => re.test(game.name));
       setGames(filteredGames);
-      const res = await signUpUser({
-        userName: 'bigtest',
-        userEmail: 'thisisanemail',
-        userPassword: 'fuckerwoiefj',
-      });
-      console.log('RESULT', res);
       setSearchValue('');
     }
   };

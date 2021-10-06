@@ -1,5 +1,4 @@
-import React from 'react';
-// import { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Text,
   StyleSheet,
@@ -7,12 +6,8 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import GameShow from './GameShow';
-import { addGame, gameSelector, getMyGameInfo } from '../redux/GameSlice';
-// import { authSelector } from '../redux/AuthSlice';
-import { fetchUserByToken } from '../redux/UserSlice';
+import addGameToList from '../Services/GameService';
 
 const GameList = ({
   games,
@@ -20,24 +15,12 @@ const GameList = ({
   navigation,
   token,
 }) => {
-  const dispatch = useDispatch();
-  const { isMessage } = useSelector(gameSelector);
+  const [serverRes, setServerRes] = useState('');
 
-  const addGameToList = async (game) => {
-    try {
-      const userToken = dispatch(
-        fetchUserByToken({ token: await AsyncStorage.getItem('token') }),
-      );
-      if (userToken) {
-        const { fetchedToken } = userToken.arg;
-        const data = dispatch(addGame({ game, fetchedToken }));
-        if (data) {
-          dispatch(getMyGameInfo(fetchedToken));
-        }
-      }
-    } catch (err) {
-      console.log('error token app', err.message);
-    }
+  const addGame = async (game) => {
+    const res = await addGameToList(game);
+    if (res.error) setServerRes(res.error);
+    else setServerRes('Game added to list!');
   };
 
   return (
@@ -46,7 +29,7 @@ const GameList = ({
         flex: 1,
       }}
     >
-      <Text style={styles.error}>{isMessage}</Text>
+      <Text style={styles.error}>{serverRes}</Text>
       <Text style={styles.title}>{title}</Text>
       <FlatList
         data={games}
@@ -56,9 +39,8 @@ const GameList = ({
             onPress={() => navigation.navigate('Details', { id: item.id })}
           >
             <GameShow
-              navigation={navigation}
               game={item}
-              addGameToList={addGameToList}
+              addGameToList={addGame}
               token={token}
             />
           </TouchableOpacity>

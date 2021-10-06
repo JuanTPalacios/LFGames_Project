@@ -4,7 +4,6 @@ interface IState {
   user: {
     userName: string,
     email: string,
-    games: any[]
   },
   isAuthenticated: boolean
 }
@@ -13,7 +12,6 @@ const initialState: IState = {
   user: {
     userName: '',
     email: '',
-    games: []
   },
   isAuthenticated: false
 };
@@ -24,7 +22,6 @@ export const userSlice = createSlice({
     user: {
     userName: '',
     email: '',
-    games: []
   },
   isAuthenticated: false
   },
@@ -48,5 +45,5 @@ export const userSlice = createSlice({
 });
 
 export const { signIn, signOut, clearState } = userSlice.actions;
-export const authSelector = (state) => state.user;
+export const authSelector = (state: IState) => state.user;
 export default userSlice.reducer;

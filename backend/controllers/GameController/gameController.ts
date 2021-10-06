@@ -12,7 +12,7 @@ export const addGameToList = async (req: Request, res: Response) => {
   try {
     const { _id } = req.body.user;
     let owned = false;
-    const {name, id: gameId, cover, total_rating, genres, platforms, completed, first_release_date } = req.body.game;
+    const {name, id: gameId, cover, total_rating, genres, platforms, completed, first_release_date } = req.body;
     const url = cover.url;
     const image_id = cover.image_id;
 
